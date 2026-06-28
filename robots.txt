@@ -1,1 +1,1 @@
-Sitemap: https://github.com/avanli/Causal-Machine-Learning/sitemap.xml
+Sitemap: https://avanli.github.io/Causal-Machine-Learning/sitemap.xml

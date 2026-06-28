@@ -1,0 +1,6 @@
+---
+title: "Causal Machine Learning Notes"
+---
+
+- [Invariant Causal Prediction](icp_illustration.qmd)
+- [Smoking, BMI, and Diabetes](smoking_bmi_diabetes_causal.qmd)

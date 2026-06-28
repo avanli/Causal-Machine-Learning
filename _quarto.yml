@@ -1,0 +1,20 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Causal Machine Learning"
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "ICP"
+        href: icp_illustration.qmd
+      - text: "Smoking-BMI-Diabetes"
+        href: smoking_bmi_diabetes_causal.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    embed-resources: false

@@ -2,14 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://avanli.github.io/Causal-Machine-Learning/smoking_bmi_diabetes_causal.html</loc>
-    <lastmod>2026-07-02T20:43:43.519Z</lastmod>
+    <lastmod>2026-07-03T02:50:35.756Z</lastmod>
+  </url>
+  <url>
+    <loc>https://avanli.github.io/Causal-Machine-Learning/main-causal structures.html</loc>
+    <lastmod>2026-07-03T02:49:45.298Z</lastmod>
   </url>
   <url>
     <loc>https://avanli.github.io/Causal-Machine-Learning/icp_illustration.html</loc>
-    <lastmod>2026-07-02T20:43:27.432Z</lastmod>
+    <lastmod>2026-07-03T02:49:37.202Z</lastmod>
+  </url>
+  <url>
+    <loc>https://avanli.github.io/Causal-Machine-Learning/causal_structures.html</loc>
+    <lastmod>2026-07-03T02:49:32.218Z</lastmod>
   </url>
   <url>
     <loc>https://avanli.github.io/Causal-Machine-Learning/index.html</loc>
-    <lastmod>2026-07-02T20:43:27.684Z</lastmod>
+    <lastmod>2026-07-03T02:49:37.704Z</lastmod>
+  </url>
+  <url>
+    <loc>https://avanli.github.io/Causal-Machine-Learning/smoking_bmi_diabetes_causal-v0.html</loc>
+    <lastmod>2026-07-03T02:50:11.089Z</lastmod>
   </url>
 </urlset>

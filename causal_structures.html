@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Arda">
+<meta name="dcterms.date" content="2026-07-02">
+
+<title>Causal Machine Learning - Causal Structures and Matching</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./icp_illustration.html">Causal Inference Methods</a></li><li class="breadcrumb-item"><a href="./causal_structures.html">Causal Structures &amp; Matching</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Causal Machine Learning</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Causal Inference Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./icp_illustration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Invariant Causal Prediction (ICP)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./causal_structures.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Causal Structures &amp; Matching</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Causal ML Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./smoking_bmi_diabetes_causal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Smoking, BMI &amp; Diabetes</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#simple-causal-chain" id="toc-simple-causal-chain" class="nav-link" data-scroll-target="#simple-causal-chain"><span class="header-section-number">2</span> Simple causal chain</a></li>
+  <li><a href="#confounder-pre-treatment-covariate" id="toc-confounder-pre-treatment-covariate" class="nav-link" data-scroll-target="#confounder-pre-treatment-covariate"><span class="header-section-number">3</span> Confounder (pre-treatment covariate)</a>
+  <ul class="collapse">
+  <li><a href="#simulated-data" id="toc-simulated-data" class="nav-link" data-scroll-target="#simulated-data"><span class="header-section-number">3.1</span> Simulated data</a></li>
+  <li><a href="#manual-matching" id="toc-manual-matching" class="nav-link" data-scroll-target="#manual-matching"><span class="header-section-number">3.2</span> Manual matching</a></li>
+  <li><a href="#matchit-nearest-neighbour-and-cem" id="toc-matchit-nearest-neighbour-and-cem" class="nav-link" data-scroll-target="#matchit-nearest-neighbour-and-cem"><span class="header-section-number">3.3</span> MatchIt: nearest-neighbour and CEM</a></li>
+  <li><a href="#stratification-and-g-computation" id="toc-stratification-and-g-computation" class="nav-link" data-scroll-target="#stratification-and-g-computation"><span class="header-section-number">3.4</span> Stratification and g-computation</a></li>
+  </ul></li>
+  <li><a href="#collider" id="toc-collider" class="nav-link" data-scroll-target="#collider"><span class="header-section-number">4</span> Collider</a></li>
+  <li><a href="#sec-mediation" id="toc-sec-mediation" class="nav-link" data-scroll-target="#sec-mediation"><span class="header-section-number">5</span> Post-treatment covariate (mediation)</a>
+  <ul class="collapse">
+  <li><a href="#simulated-data-1" id="toc-simulated-data-1" class="nav-link" data-scroll-target="#simulated-data-1"><span class="header-section-number">5.1</span> Simulated data</a></li>
+  <li><a href="#effect-decomposition-via-regression" id="toc-effect-decomposition-via-regression" class="nav-link" data-scroll-target="#effect-decomposition-via-regression"><span class="header-section-number">5.2</span> Effect decomposition via regression</a></li>
+  <li><a href="#causal-mediation-analysis-mediation-package" id="toc-causal-mediation-analysis-mediation-package" class="nav-link" data-scroll-target="#causal-mediation-analysis-mediation-package"><span class="header-section-number">5.3</span> Causal mediation analysis (mediation package)</a></li>
+  <li><a href="#g-formula-applied-to-the-linear-mediation-sem" id="toc-g-formula-applied-to-the-linear-mediation-sem" class="nav-link" data-scroll-target="#g-formula-applied-to-the-linear-mediation-sem"><span class="header-section-number">5.4</span> G-formula applied to the linear mediation SEM</a></li>
+  </ul></li>
+  <li><a href="#adjustment-set-identification-from-a-dag" id="toc-adjustment-set-identification-from-a-dag" class="nav-link" data-scroll-target="#adjustment-set-identification-from-a-dag"><span class="header-section-number">6</span> Adjustment set identification from a DAG</a></li>
+  <li><a href="#random-vs-non-random-assignment" id="toc-random-vs-non-random-assignment" class="nav-link" data-scroll-target="#random-vs-non-random-assignment"><span class="header-section-number">7</span> Random vs non-random assignment</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">8</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Causal Structures and Matching</h1>
+<p class="subtitle lead">Confounders, Mediators, Colliders, and Matching Estimators</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Arda </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 2, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>This document generates simulated data from simple causal structures and estimates treatment effects using adjusted regression, matching, and the g-formula. It draws on:</p>
+<ul>
+<li><span class="citation" data-cites="pearl2016">Pearl, Glymour, and Jewell (<a href="#ref-pearl2016" role="doc-biblioref">2016</a>)</span> — <em>Causal Inference in Statistics: A Primer</em></li>
+<li><span class="citation" data-cites="huber2023">Huber (<a href="#ref-huber2023" role="doc-biblioref">2023</a>)</span> — <em>Causal Analysis</em> (MIT Press)</li>
+<li><span class="citation" data-cites="huntington2021">Huntington-Klein (<a href="#ref-huntington2021" role="doc-biblioref">2021</a>)</span> — <em>The Effect</em></li>
+<li><span class="citation" data-cites="chernozhukov2024">Chernozhukov et al. (<a href="#ref-chernozhukov2024" role="doc-biblioref">2024</a>)</span> — <em>Applied Causal Inference Powered by ML and AI</em></li>
+<li><span class="citation" data-cites="angrist2009">Angrist and Pischke (<a href="#ref-angrist2009" role="doc-biblioref">2009</a>)</span> — <em>Mostly Harmless Econometrics</em></li>
+<li><span class="citation" data-cites="brumback2022">Brumback (<a href="#ref-brumback2022" role="doc-biblioref">2022</a>)</span> — <em>Fundamentals of Causal Inference with R</em></li>
+<li><span class="citation" data-cites="chatton2024">Chatton and Rohrer (<a href="#ref-chatton2024" role="doc-biblioref">2024</a>)</span> — <em>The Causal Cookbook</em></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bnlearn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<hr>
+</section>
+<section id="simple-causal-chain" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="simple-causal-chain"><span class="header-section-number">2</span> Simple causal chain</h2>
+<p>The simplest structure: <span class="math inline">\(D \rightarrow Y\)</span>. No confounding; the regression coefficient for <span class="math inline">\(D\)</span> directly recovers the causal effect.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">  D [pos="0,.1"]</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Y [pos=".2,.1"]</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">  D -&gt; Y</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="causal_structures_files/figure-html/dag-chain-1.png" class="img-fluid figure-img" width="288"></p>
+<figcaption class="figure-caption">Simple chain: D causes Y directly.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="confounder-pre-treatment-covariate" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="confounder-pre-treatment-covariate"><span class="header-section-number">3</span> Confounder (pre-treatment covariate)</h2>
+<p><strong>Structure:</strong> <span class="math inline">\(D \rightarrow Y\)</span>, <span class="math inline">\(U \rightarrow D\)</span>, <span class="math inline">\(U \rightarrow Y\)</span>.</p>
+<p><span class="math inline">\(U\)</span> is a confounder — it causes both treatment and outcome, opening a back-door path <span class="math inline">\(D \leftarrow U \rightarrow Y\)</span>. Naive comparison of treated and control units conflates the causal effect of <span class="math inline">\(D\)</span> with the selection effect of <span class="math inline">\(U\)</span>.</p>
+<p><strong>Identification strategy:</strong> block the back-door path by conditioning on <span class="math inline">\(U\)</span>. The adjustment formula gives:</p>
+<p><span class="math display">\[P(Y=y \mid \text{do}(D=d)) = \sum_U P(Y=y \mid D=d, U=u)\,P(U=u)\]</span></p>
+<p>and the ATE is <span class="math inline">\(E[Y \mid \text{do}(D=1)] - E[Y \mid \text{do}(D=0)]\)</span>.</p>
+<p>For continuous <span class="math inline">\(U\)</span>, regression adjustment achieves this:</p>
+<p><span class="math display">\[Y = \beta_0 + \beta_D D + \beta_U U + \varepsilon
+\quad \Rightarrow \quad \hat\beta_D = \text{causal effect of } D\]</span></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="st">  D [pos="0,.1"]</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Y [pos=".2,.1"]</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">  U [pos=".1,.2"]</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">  D -&gt; Y</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">  D &lt;- U -&gt; Y</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="causal_structures_files/figure-html/dag-confounder-1.png" class="img-fluid figure-img" width="288"></p>
+<figcaption class="figure-caption">Confounder U creates a back-door path from D to Y.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="simulated-data" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="simulated-data"><span class="header-section-number">3.1</span> Simulated data</h3>
+<p>True SEM:</p>
+<p><span class="math display">\[U \sim \mathcal{N}(0,1), \quad
+  D = \mathbf{1}[U &gt; 0.5], \quad
+  Y = 10 + 20\,D + 5\,U + \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, 1.5^2)\]</span></p>
+<p>True causal effect of <span class="math inline">\(D\)</span>: <span class="math inline">\(\rho = 20\)</span>.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>U <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>p.overlap <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(U <span class="sc">&gt;</span> <span class="fl">0.5</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(<span class="fu">runif</span>(n) <span class="sc">&gt;</span> p.overlap, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(<span class="fu">runif</span>(n) <span class="sc">&gt;</span> p.overlap, <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>Y   <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> rho <span class="sc">*</span> D <span class="sc">+</span> <span class="dv">5</span> <span class="sc">*</span> U <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fl">1.5</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Naive (unadjusted) ATE</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Non-adjusted ATE (biased):"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(Y[D<span class="sc">==</span><span class="dv">1</span>]) <span class="sc">-</span> <span class="fu">mean</span>(Y[D<span class="sc">==</span><span class="dv">0</span>]), <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Non-adjusted ATE (biased): 26.04 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"True causal effect (rho):"</span>, rho, <span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>True causal effect (rho): 20 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Covariate balance check</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Mean U | D=0:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(U[D<span class="sc">==</span><span class="dv">0</span>]), <span class="dv">3</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"  Mean U | D=1:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(U[D<span class="sc">==</span><span class="dv">1</span>]), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Mean U | D=0: -0.369   Mean U | D=1: 0.857 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why naive comparison is biased here
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Because <span class="math inline">\(D\)</span> is assigned based on <span class="math inline">\(U\)</span> (high-<span class="math inline">\(U\)</span> individuals more likely to get <span class="math inline">\(D=1\)</span>), and <span class="math inline">\(U\)</span> also directly affects <span class="math inline">\(Y\)</span>, the treated group has higher <span class="math inline">\(Y\)</span> on average for reasons unrelated to <span class="math inline">\(D\)</span>. The naive difference-in-means overestimates the causal effect.</p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(U, Y, <span class="at">D =</span> <span class="fu">factor</span>(D))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(U, <span class="at">fill =</span> D), <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">position =</span> <span class="st">"identity"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"0"</span> <span class="ot">=</span> <span class="st">"#3B8BD4"</span>, <span class="st">"1"</span> <span class="ot">=</span> <span class="st">"#D85A30"</span>)) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Covariate U is not balanced across treatment groups"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"U"</span>, <span class="at">fill =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="causal_structures_files/figure-html/confounder-balance-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Covariate imbalance: U distribution differs substantially between D=0 and D=1.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="manual-matching" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="manual-matching"><span class="header-section-number">3.2</span> Manual matching</h3>
+<p>Select only units where <span class="math inline">\(-0.75 &lt; U &lt; 0.25\)</span> in both groups to create a balanced sample.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df_num <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(U, Y, <span class="at">D =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(df<span class="sc">$</span>D)))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ind0 <span class="ot">&lt;-</span> <span class="fu">which</span>(df_num<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ind1 <span class="ot">&lt;-</span> <span class="fu">which</span>(df_num<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>ind.match0 <span class="ot">&lt;-</span> ind0[U[df_num<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">0</span>] <span class="sc">&lt;</span> <span class="fl">0.25</span> <span class="sc">&amp;</span> U[df_num<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">0</span>] <span class="sc">&gt;</span> <span class="sc">-</span><span class="fl">0.75</span>]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>ind.match1 <span class="ot">&lt;-</span> ind1[U[df_num<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">1</span>] <span class="sc">&lt;</span> <span class="fl">0.25</span> <span class="sc">&amp;</span> U[df_num<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">1</span>] <span class="sc">&gt;</span> <span class="sc">-</span><span class="fl">0.75</span>]</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>df.matched <span class="ot">&lt;-</span> df_num[<span class="fu">c</span>(ind.match0, ind.match1), ]</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Balance before matching — Mean U | D=0:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(U[ind0]), <span class="dv">3</span>),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">" D=1:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(U[ind1]), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Balance before matching — Mean U | D=0: -0.369  D=1: 0.857 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Balance after  matching — Mean U | D=0:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(df.matched<span class="sc">$</span>U[df.matched<span class="sc">$</span>D<span class="sc">==</span><span class="dv">0</span>]), <span class="dv">3</span>),</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">" D=1:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(df.matched<span class="sc">$</span>U[df.matched<span class="sc">$</span>D<span class="sc">==</span><span class="dv">1</span>]), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Balance after  matching — Mean U | D=0: -0.27  D=1: -0.357 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>lm.matched <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> D <span class="sc">+</span> U, df.matched)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"True causal effect:"</span>, rho, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>True causal effect: 20 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Estimate (manual match + regression):"</span>, <span class="fu">round</span>(<span class="fu">coef</span>(lm.matched)[<span class="st">"D"</span>], <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Estimate (manual match + regression): 19.75 </code></pre>
+</div>
+</div>
+</section>
+<section id="matchit-nearest-neighbour-and-cem" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="matchit-nearest-neighbour-and-cem"><span class="header-section-number">3.3</span> MatchIt: nearest-neighbour and CEM</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_m <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(U, Y, <span class="at">D =</span> <span class="fu">as.integer</span>(<span class="fu">as.character</span>(df<span class="sc">$</span>D)))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Nearest-neighbour (optimal) matching</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>m_out     <span class="ot">&lt;-</span> <span class="fu">matchit</span>(D <span class="sc">~</span> U, <span class="at">data =</span> df_m, <span class="at">method =</span> <span class="st">"optimal"</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>m_data    <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_out, <span class="at">drop.unmatched =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>lm.match2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> D <span class="sc">+</span> U, m_data)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Coarsened exact matching</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>m_out_cem  <span class="ot">&lt;-</span> <span class="fu">matchit</span>(D <span class="sc">~</span> U, <span class="at">data =</span> df_m, <span class="at">method =</span> <span class="st">"cem"</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>m_data_cem <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_out_cem, <span class="at">drop.unmatched =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>lm.match3  <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> D <span class="sc">+</span> U, m_data_cem, <span class="at">weights =</span> m_data_cem<span class="sc">$</span>weights)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Method    =</span> <span class="fu">c</span>(<span class="st">"True effect"</span>, <span class="st">"Naive (no adjustment)"</span>,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Regression + full data"</span>, <span class="st">"Nearest-neighbour match"</span>,</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Coarsened exact match"</span>),</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">Estimate  =</span> <span class="fu">round</span>(<span class="fu">c</span>(rho,</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">mean</span>(Y[D<span class="sc">==</span><span class="dv">1</span>]) <span class="sc">-</span> <span class="fu">mean</span>(Y[D<span class="sc">==</span><span class="dv">0</span>]),</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">coef</span>(<span class="fu">lm</span>(Y <span class="sc">~</span> D <span class="sc">+</span> U, df_m))[<span class="st">"D"</span>],</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">coef</span>(lm.match2)[<span class="st">"D"</span>],</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">coef</span>(lm.match3)[<span class="st">"D"</span>]), <span class="dv">2</span>)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>), <span class="at">caption =</span> <span class="st">"ATE estimates under different adjustment strategies"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>ATE estimates under different adjustment strategies</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Method</th>
+<th style="text-align: right;">Estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">True effect</td>
+<td style="text-align: right;">20.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Naive (no adjustment)</td>
+<td style="text-align: right;">26.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Regression + full data</td>
+<td style="text-align: right;">19.62</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nearest-neighbour match</td>
+<td style="text-align: right;">19.61</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Coarsened exact match</td>
+<td style="text-align: right;">21.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="stratification-and-g-computation" class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="stratification-and-g-computation"><span class="header-section-number">3.4</span> Stratification and g-computation</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df_m<span class="sc">$</span>Ulevel <span class="ot">&lt;-</span> <span class="fu">cut</span>(df_m<span class="sc">$</span>U, <span class="at">breaks =</span> <span class="fu">quantile</span>(df_m<span class="sc">$</span>U, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>)))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df_m <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(df_m)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>df.means <span class="ot">&lt;-</span> df_m <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Ulevel, D) <span class="sc">%&gt;%</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_Y =</span> <span class="fu">mean</span>(Y), <span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>N0          <span class="ot">&lt;-</span> <span class="fu">sum</span>(df_m<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>diff_means  <span class="ot">&lt;-</span> df.means<span class="sc">$</span>mean_Y[df.means<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">1</span>] <span class="sc">-</span> df.means<span class="sc">$</span>mean_Y[df.means<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">0</span>]</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>count_diff  <span class="ot">&lt;-</span> df.means<span class="sc">$</span>count[df.means<span class="sc">$</span>D <span class="sc">==</span> <span class="dv">0</span>]</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>ate_strat   <span class="ot">&lt;-</span> <span class="fu">sum</span>(diff_means <span class="sc">*</span> count_diff) <span class="sc">/</span> N0</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># G-computation (parametric g-formula for linear outcome)</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>Q       <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> D <span class="sc">+</span> U, <span class="at">data =</span> df_m)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>A1      <span class="ot">&lt;-</span> df_m; A1<span class="sc">$</span>D <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>A0      <span class="ot">&lt;-</span> df_m; A0<span class="sc">$</span>D <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>RD_gcomp <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">predict</span>(Q, A1)) <span class="sc">-</span> <span class="fu">mean</span>(<span class="fu">predict</span>(Q, A0))</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Stratified weighted ATE:"</span>, <span class="fu">round</span>(ate_strat, <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Stratified weighted ATE: 20.32 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"G-computation ATE:      "</span>, <span class="fu">round</span>(RD_gcomp, <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>G-computation ATE:       19.63 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"True causal effect:     "</span>, rho, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>True causal effect:      20 </code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="collider" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="collider"><span class="header-section-number">4</span> Collider</h2>
+<p><strong>Structure:</strong> <span class="math inline">\(D \rightarrow U\)</span>, <span class="math inline">\(Y \rightarrow U\)</span>.</p>
+<p><span class="math inline">\(U\)</span> is a <em>collider</em> — both <span class="math inline">\(D\)</span> and <span class="math inline">\(Y\)</span> cause it. Conditioning on a collider <strong>opens</strong> a spurious path between <span class="math inline">\(D\)</span> and <span class="math inline">\(Y\)</span> that does not exist in the true DAG. Do <strong>not</strong> adjust for colliders.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>g_col <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="st">  D [pos="0,1"]</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Y [pos="2,1"]</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="st">  U [pos="1,0"]</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="st">  D -&gt; U</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Y -&gt; U</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="st">  D -&gt; Y</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g_col)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="causal_structures_files/figure-html/dag-collider-1.png" class="img-fluid figure-img" width="288"></p>
+<figcaption class="figure-caption">Collider U: both D and Y cause U. Conditioning on U introduces bias.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>n   <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>D_c <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">runif</span>(n) <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>Y_c <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">20</span> <span class="sc">*</span> D_c <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fl">1.5</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>U_c <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(D_c <span class="sc">==</span> <span class="dv">1</span>, <span class="fu">rnorm</span>(n, <span class="dv">5</span>, <span class="dv">1</span>), <span class="fu">rnorm</span>(n, <span class="dv">10</span>, <span class="dv">1</span>)) <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> Y_c</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>df.col <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Y =</span> Y_c, <span class="at">U =</span> U_c, <span class="at">D =</span> D_c)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>lm.col.adj    <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> U <span class="sc">+</span> D, df.col)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>lm.col.noadj  <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> D,     df.col)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Model    =</span> <span class="fu">c</span>(<span class="st">"True effect"</span>, <span class="st">"Adjusted for collider U (biased)"</span>,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Not adjusted (correct)"</span>),</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">Estimate =</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="dv">20</span>, <span class="fu">coef</span>(lm.col.adj)[<span class="st">"D"</span>], <span class="fu">coef</span>(lm.col.noadj)[<span class="st">"D"</span>]), <span class="dv">2</span>)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>), <span class="at">caption =</span> <span class="st">"Collider bias: adjusting for U distorts the estimate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Collider bias: adjusting for U distorts the estimate</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: right;">Estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">True effect</td>
+<td style="text-align: right;">20.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adjusted for collider U (biased)</td>
+<td style="text-align: right;">16.43</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Not adjusted (correct)</td>
+<td style="text-align: right;">19.97</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Collider bias
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Conditioning on a collider induces a spurious correlation between <span class="math inline">\(D\)</span> and <span class="math inline">\(Y\)</span> that is not causal. The unadjusted model correctly recovers the true effect of 20; the adjusted model is biased.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="sec-mediation" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="sec-mediation"><span class="header-section-number">5</span> Post-treatment covariate (mediation)</h2>
+<p><strong>Structure:</strong> <span class="math inline">\(D \rightarrow U \rightarrow Y\)</span> and <span class="math inline">\(D \rightarrow Y\)</span>.</p>
+<p><span class="math inline">\(U\)</span> is a <strong>mediator</strong> — it lies on the causal path from <span class="math inline">\(D\)</span> to <span class="math inline">\(Y\)</span>. This is the key structure also present in the smoking–BMI–diabetes example: Quit Smoking <span class="math inline">\(\rightarrow\)</span> <span class="math inline">\(\Delta\)</span>BMI <span class="math inline">\(\rightarrow\)</span> T2D.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>g_med <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="st">  D [pos="0,1"]</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Y [pos="2,1"]</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="st">  U [pos="1,2"]</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="st">  D -&gt; Y</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="st">  D -&gt; U -&gt; Y</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g_med)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="causal_structures_files/figure-html/dag-mediation-1.png" class="img-fluid figure-img" width="384"></p>
+<figcaption class="figure-caption">Mediation: D affects Y both directly and via mediator U.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="simulated-data-1" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="simulated-data-1"><span class="header-section-number">5.1</span> Simulated data</h3>
+<p>True SEM (linear, continuous outcome):</p>
+<p><span class="math display">\[D \sim \text{Bernoulli}(0.5), \quad
+  U = 10\,D + \varepsilon_U, \quad
+  Y = 10 + 20\,D + 5\,U + \varepsilon_Y\]</span></p>
+<p>The <strong>direct effect</strong> of <span class="math inline">\(D\)</span> on <span class="math inline">\(Y\)</span> is <span class="math inline">\(\beta_D = 20\)</span>. The <strong>indirect effect</strong> (via <span class="math inline">\(U\)</span>) is <span class="math inline">\(\beta_U \times \delta = 5 \times 10 = 50\)</span>. The <strong>total effect</strong> is <span class="math inline">\(20 + 50 = 70\)</span>.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>n   <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>D_m <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">runif</span>(n) <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>U_m <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">*</span> D_m <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>Y_m <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">+</span> <span class="dv">20</span> <span class="sc">*</span> D_m <span class="sc">+</span> <span class="dv">5</span> <span class="sc">*</span> U_m <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fl">1.5</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Mean U | D=1:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(U_m[D_m<span class="sc">==</span><span class="dv">1</span>]), <span class="dv">2</span>),</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"  Mean U | D=0:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(U_m[D_m<span class="sc">==</span><span class="dv">0</span>]), <span class="dv">2</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Mean U | D=1: 10.11   Mean U | D=0: -0.02 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"(U is not balanced — it is caused by D, not a confounder)</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>(U is not balanced — it is caused by D, not a confounder)</code></pre>
+</div>
+</div>
+</section>
+<section id="effect-decomposition-via-regression" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="effect-decomposition-via-regression"><span class="header-section-number">5.2</span> Effect decomposition via regression</h3>
+<p>Adjusting for mediator <span class="math inline">\(U\)</span> recovers the <strong>direct effect</strong> only. Omitting <span class="math inline">\(U\)</span> recovers the <strong>total effect</strong>. In the linear case these follow algebraically from the structural coefficients:</p>
+<p><span class="math display">\[\text{Direct effect} = \beta_D = 20\]</span> <span class="math display">\[\text{Indirect effect} = \beta_U \times \delta = 5 \times 10 = 50\]</span> <span class="math display">\[\text{Total effect} = \beta_D + \beta_U \delta = 70\]</span></p>
+<p>where <span class="math inline">\(\delta = E[U \mid D=1] - E[U \mid D=0]\)</span> is estimated from the auxiliary regression <span class="math inline">\(U \sim D\)</span>.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>lm.adj   <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y_m <span class="sc">~</span> U_m <span class="sc">+</span> D_m)   <span class="co"># direct effect (controls for mediator)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>lm.noadj <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y_m <span class="sc">~</span> D_m)         <span class="co"># total effect  (omits mediator)</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Auxiliary: how much does D shift U (the mediator)?</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lm</span>(U_m <span class="sc">~</span> D_m))[<span class="st">"D_m"</span>]</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Quantity =</span> <span class="fu">c</span>(</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"True direct effect  (β_D)"</span>,</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"True indirect effect  (β_U × δ)"</span>,</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"True total effect  (direct + indirect)"</span>,</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Estimated direct effect  (lm with U)"</span>,</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Estimated indirect effect  (β̂_U × δ̂)"</span>,</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Estimated total effect  (lm without U)"</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>    <span class="dv">20</span>, <span class="dv">5</span> <span class="sc">*</span> <span class="dv">10</span>, <span class="dv">70</span>,</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(lm.adj)[<span class="st">"D_m"</span>],</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(lm.adj)[<span class="st">"U_m"</span>] <span class="sc">*</span> delta,</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(lm.noadj)[<span class="st">"D_m"</span>]</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>  ), <span class="dv">2</span>)</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>), <span class="at">caption =</span> <span class="st">"Regression-based mediation decomposition: direct, indirect, and total effects"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Regression-based mediation decomposition: direct, indirect, and total effects</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Quantity</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">True direct effect (β_D)</td>
+<td style="text-align: right;">20.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">True indirect effect (β_U × δ)</td>
+<td style="text-align: right;">50.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">True total effect (direct + indirect)</td>
+<td style="text-align: right;">70.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Estimated direct effect (lm with U)</td>
+<td style="text-align: right;">18.40</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Estimated indirect effect (β̂_U × δ̂)</td>
+<td style="text-align: right;">52.22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Estimated total effect (lm without U)</td>
+<td style="text-align: right;">70.62</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="causal-mediation-analysis-mediation-package" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="causal-mediation-analysis-mediation-package"><span class="header-section-number">5.3</span> Causal mediation analysis (mediation package)</h3>
+<p>The regression approach above works cleanly in the linear case because effects add on the same scale. For non-linear outcomes (e.g.&nbsp;logistic regression in the smoking example) we need the <strong>potential-outcomes</strong> framework of <span class="citation" data-cites="imai2010">Imai, Keele, and Tingley (<a href="#ref-imai2010" role="doc-biblioref">2010</a>)</span>. We apply it here to the linear case so the machinery is transparent before the logistic application.</p>
+<p>The two estimands are:</p>
+<p><span class="math display">\[\text{ACME} = E\bigl[Y_i(1, M_i(1)) - Y_i(1, M_i(0))\bigr]
+  \quad \text{(indirect / mediated effect)}\]</span></p>
+<p><span class="math display">\[\text{ADE} = E\bigl[Y_i(1, M_i(0)) - Y_i(0, M_i(0))\bigr]
+  \quad \text{(direct effect)}\]</span></p>
+<p>In the linear SEM these reduce to <span class="math inline">\(\text{ACME} = \beta_U \delta = 50\)</span> and <span class="math inline">\(\text{ADE} = \beta_D = 20\)</span>, matching the regression estimates above.</p>
+<div class="cell" data-hash="causal_structures_cache/html/mediation-pkg_87f87bda58a1b3e9f51ad36503978304">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mediation)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>df_med <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">D =</span> D_m, <span class="at">U =</span> U_m, <span class="at">Y =</span> Y_m)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: mediator model  M ~ T + C  (no confounders here; D is randomised)</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>med_lm  <span class="ot">&lt;-</span> <span class="fu">lm</span>(U <span class="sc">~</span> D, <span class="at">data =</span> df_med)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: outcome model  Y ~ T + M + C</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>out_lm  <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> D <span class="sc">+</span> U, <span class="at">data =</span> df_med)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: mediate() simulates potential outcomes</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>med_lin <span class="ot">&lt;-</span> <span class="fu">mediate</span>(med_lm, out_lm,</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">treat    =</span> <span class="st">"D"</span>,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">mediator =</span> <span class="st">"U"</span>,</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sims     =</span> <span class="dv">500</span>)</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>med_lin_tbl <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">Component =</span> <span class="fu">c</span>(<span class="st">"ACME  (indirect via U)"</span>,</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">"ADE   (direct effect)"</span>,</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Total effect"</span>,</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Proportion mediated"</span>),</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">Estimate  =</span> <span class="fu">round</span>(<span class="fu">c</span>(med_lin<span class="sc">$</span>d0, med_lin<span class="sc">$</span>z0,</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>                      med_lin<span class="sc">$</span>tau.coef, med_lin<span class="sc">$</span>n0), <span class="dv">2</span>),</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">95% CI</span><span class="st">`</span>  <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sprintf</span>(<span class="st">"[%.2f, %.2f]"</span>, med_lin<span class="sc">$</span>d0.ci[<span class="dv">1</span>],  med_lin<span class="sc">$</span>d0.ci[<span class="dv">2</span>]),</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sprintf</span>(<span class="st">"[%.2f, %.2f]"</span>, med_lin<span class="sc">$</span>z0.ci[<span class="dv">1</span>],  med_lin<span class="sc">$</span>z0.ci[<span class="dv">2</span>]),</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sprintf</span>(<span class="st">"[%.2f, %.2f]"</span>, med_lin<span class="sc">$</span>tau.ci[<span class="dv">1</span>], med_lin<span class="sc">$</span>tau.ci[<span class="dv">2</span>]),</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"—"</span>),</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">True value</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"50 (= β_U × δ = 5 × 10)"</span>,</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"20 (= β_D)"</span>,</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"70"</span>,</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"71.4% (= 50/70)"</span>),</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(med_lin_tbl,</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="fu">paste0</span>(</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Causal mediation analysis (Imai et al. 2010) applied to the linear SEM. "</span>,</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ACME and ADE match the true structural coefficients. "</span>,</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"In the linear case, mediation package results equal the regression decomposition above."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Causal mediation analysis (Imai et al.&nbsp;2010) applied to the linear SEM. ACME and ADE match the true structural coefficients. In the linear case, mediation package results equal the regression decomposition above.</caption>
+<colgroup>
+<col style="width: 32%">
+<col style="width: 12%">
+<col style="width: 21%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Component</th>
+<th style="text-align: right;">Estimate</th>
+<th style="text-align: left;">95% CI</th>
+<th style="text-align: left;">True value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ACME (indirect via U)</td>
+<td style="text-align: right;">52.19</td>
+<td style="text-align: left;">[49.88, 54.71]</td>
+<td style="text-align: left;">50 (= β_U × δ = 5 × 10)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ADE (direct effect)</td>
+<td style="text-align: right;">18.45</td>
+<td style="text-align: left;">[16.39, 20.53]</td>
+<td style="text-align: left;">20 (= β_D)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Total effect</td>
+<td style="text-align: right;">70.63</td>
+<td style="text-align: left;">[69.16, 72.04]</td>
+<td style="text-align: left;">70</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Proportion mediated</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">71.4% (= 50/70)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="g-formula-applied-to-the-linear-mediation-sem" class="level3" data-number="5.4">
+<h3 data-number="5.4" class="anchored" data-anchor-id="g-formula-applied-to-the-linear-mediation-sem"><span class="header-section-number">5.4</span> G-formula applied to the linear mediation SEM</h3>
+<p>In the linear case the g-formula reduces to g-computation: fit models for the mediator and outcome, then predict the outcome under the intervention <span class="math inline">\(\text{do}(D = t)\)</span> by replacing observed <span class="math inline">\(U\)</span> with the predicted counterfactual <span class="math inline">\(\hat U^{(t)}\)</span>:</p>
+<p><span class="math display">\[\hat U_i^{(t)} = \hat\alpha_0 + \hat\alpha_1\,t\]</span></p>
+<p><span class="math display">\[\hat Y_i^{(t)} = \hat\beta_0 + \hat\beta_1\,t + \hat\beta_2\,\hat U_i^{(t)}\]</span></p>
+<p><span class="math display">\[\widehat{\text{ATE}} = \frac{1}{n}\sum_i \hat Y_i^{(1)}
+                         - \frac{1}{n}\sum_i \hat Y_i^{(0)}\]</span></p>
+<p>For a linear SEM this equals the total effect coefficient from the unadjusted regression, but the three-step procedure generalises directly to the logistic case in the smoking example.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit models on observed data</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>med_gform_lin <span class="ot">&lt;-</span> <span class="fu">lm</span>(U <span class="sc">~</span> D,     <span class="at">data =</span> df_med)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>out_gform_lin <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> D <span class="sc">+</span> U, <span class="at">data =</span> df_med)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>gformula_linear <span class="ot">&lt;-</span> <span class="cf">function</span>(df, treat_val) {</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  d_int   <span class="ot">&lt;-</span> df</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  d_int<span class="sc">$</span>D <span class="ot">&lt;-</span> treat_val</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Step 1: predict mediator under intervention</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  d_int<span class="sc">$</span>U <span class="ot">&lt;-</span> <span class="fu">predict</span>(med_gform_lin, <span class="at">newdata =</span> d_int)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Step 2: predict outcome using counterfactual mediator</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="fu">predict</span>(out_gform_lin, <span class="at">newdata =</span> d_int))</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>y_do1 <span class="ot">&lt;-</span> <span class="fu">gformula_linear</span>(df_med, <span class="dv">1</span>)</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>y_do0 <span class="ot">&lt;-</span> <span class="fu">gformula_linear</span>(df_med, <span class="dv">0</span>)</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>ate_gf <span class="ot">&lt;-</span> y_do1 <span class="sc">-</span> y_do0</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Bootstrap CI</span></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>boot_lin <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">500</span>, {</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>  b  <span class="ot">&lt;-</span> df_med[<span class="fu">sample</span>(<span class="fu">nrow</span>(df_med), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>  mm <span class="ot">&lt;-</span> <span class="fu">lm</span>(U <span class="sc">~</span> D,     <span class="at">data =</span> b)</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>  om <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> D <span class="sc">+</span> U, <span class="at">data =</span> b)</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>  f  <span class="ot">&lt;-</span> <span class="cf">function</span>(tv) {</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>    d <span class="ot">&lt;-</span> b; d<span class="sc">$</span>D <span class="ot">&lt;-</span> tv; d<span class="sc">$</span>U <span class="ot">&lt;-</span> <span class="fu">predict</span>(mm, <span class="at">newdata =</span> d)</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>(<span class="fu">predict</span>(om, <span class="at">newdata =</span> d))</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">f</span>(<span class="dv">1</span>) <span class="sc">-</span> <span class="fu">f</span>(<span class="dv">0</span>)</span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>ci_lin <span class="ot">&lt;-</span> <span class="fu">quantile</span>(boot_lin, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">Quantity  =</span> <span class="fu">c</span>(<span class="st">"E[Y | do(D=1)]"</span>, <span class="st">"E[Y | do(D=0)]"</span>,</span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>                <span class="st">"ATE = do(D=1) − do(D=0)"</span>,</span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a>                <span class="st">"95% bootstrap CI"</span>, <span class="st">"True total effect"</span>),</span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value     =</span> <span class="fu">c</span>(<span class="fu">round</span>(y_do1, <span class="dv">2</span>), <span class="fu">round</span>(y_do0, <span class="dv">2</span>),</span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>                <span class="fu">round</span>(ate_gf, <span class="dv">2</span>),</span>
+<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a>                <span class="fu">sprintf</span>(<span class="st">"[%.2f, %.2f]"</span>, ci_lin[<span class="dv">1</span>], ci_lin[<span class="dv">2</span>]),</span>
+<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a>                <span class="st">"70"</span>)</span>
+<span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a>), <span class="at">caption =</span> <span class="fu">paste0</span>(</span>
+<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"G-formula ATE for the linear mediation SEM. "</span>,</span>
+<span id="cb35-42"><a href="#cb35-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">"The result matches the total effect from unadjusted regression "</span>,</span>
+<span id="cb35-43"><a href="#cb35-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"and the TE from causal mediation — all three methods agree in the linear case."</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>G-formula ATE for the linear mediation SEM. The result matches the total effect from unadjusted regression and the TE from causal mediation — all three methods agree in the linear case.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Quantity</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">E[Y | do(D=1)]</td>
+<td style="text-align: left;">80.53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E[Y | do(D=0)]</td>
+<td style="text-align: left;">9.9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ATE = do(D=1) − do(D=0)</td>
+<td style="text-align: left;">70.62</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">95% bootstrap CI</td>
+<td style="text-align: left;">[68.99, 72.22]</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">True total effect</td>
+<td style="text-align: left;">70</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Parallels and contrasts with the smoking–BMI–diabetes example
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This linear mediation example and the smoking–BMI–diabetes logistic model share the same <strong>causal skeleton</strong> — <span class="math inline">\(D \rightarrow M \rightarrow Y\)</span> and <span class="math inline">\(D \rightarrow Y\)</span> — and the same core warning about conditioning on the mediator. The three methods implemented here (regression decomposition, causal mediation package, and g-formula) all agree in the linear case. In the smoking example they are also necessary to align, and the fact that they agree there too confirms the SEM parameters are being recovered correctly.</p>
+<table class="table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Linear mediation (this section)</th>
+<th>Smoking–BMI–Diabetes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Treatment <span class="math inline">\(D\)</span></td>
+<td>Binary (randomised)</td>
+<td>Quit smoking (0/1, confounded)</td>
+</tr>
+<tr class="even">
+<td>Mediator <span class="math inline">\(M\)</span></td>
+<td>Continuous <span class="math inline">\(U = 10D + \varepsilon\)</span></td>
+<td><span class="math inline">\(\Delta\)</span>BMI</td>
+</tr>
+<tr class="odd">
+<td>Outcome <span class="math inline">\(Y\)</span></td>
+<td>Continuous (linear SEM)</td>
+<td>Binary T2D (logistic)</td>
+</tr>
+<tr class="even">
+<td>Direct effect</td>
+<td><span class="math inline">\(\beta_D = 20\)</span></td>
+<td>log-odds <span class="math inline">\(= -0.30\)</span> (OR <span class="math inline">\(\approx 0.74\)</span>)</td>
+</tr>
+<tr class="odd">
+<td>Indirect effect</td>
+<td><span class="math inline">\(\beta_U \times \delta = 5 \times 10 = 50\)</span></td>
+<td><span class="math inline">\(0.90 \times 0.20 = +0.18\)</span> log-odds</td>
+</tr>
+<tr class="even">
+<td>Total effect</td>
+<td><span class="math inline">\(20 + 50 = 70\)</span></td>
+<td><span class="math inline">\(\approx -0.12\)</span> log-odds</td>
+</tr>
+<tr class="odd">
+<td>Direction of indirect</td>
+<td><strong>Same</strong> sign as direct (+50 adds to +20)</td>
+<td><strong>Opposite</strong> sign (offsets −0.30)</td>
+</tr>
+<tr class="even">
+<td>Bias from conditioning on <span class="math inline">\(M\)</span></td>
+<td>Total effect underestimated</td>
+<td>Protective effect overestimated</td>
+</tr>
+<tr class="odd">
+<td>Correct approach (total effect)</td>
+<td>Omit <span class="math inline">\(M\)</span> from regression / g-formula</td>
+<td>G-formula / causal mediation</td>
+</tr>
+<tr class="even">
+<td>Correct approach (direct effect)</td>
+<td>Include <span class="math inline">\(M\)</span> in regression / ADE</td>
+<td>ADE from mediation package</td>
+</tr>
+<tr class="odd">
+<td>Scale issue</td>
+<td>Effects on same scale — algebra transparent</td>
+<td>Log-odds <span class="math inline">\(\neq\)</span> risk difference; delta method needed</td>
+</tr>
+<tr class="even">
+<td>All three methods agree?</td>
+<td>✅ Yes (linear case)</td>
+<td>✅ Yes (logistic, verified by SEM parameters)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key difference 1 — direction of the indirect effect.</strong> Here <span class="math inline">\(D\)</span> increases <span class="math inline">\(U\)</span> (<span class="math inline">\(\delta = 10 &gt; 0\)</span>) and <span class="math inline">\(U\)</span> increases <span class="math inline">\(Y\)</span> (<span class="math inline">\(\beta_U = 5 &gt; 0\)</span>), so the indirect path <em>amplifies</em> the total effect: <span class="math inline">\(\text{TE} = 70 &gt; \text{DE} = 20\)</span>. In the smoking example quitting <em>raises</em> <span class="math inline">\(\Delta\)</span>BMI (<span class="math inline">\(+0.90\)</span> kg/m²) and raised BMI <em>increases</em> T2D risk (<span class="math inline">\(+0.20\)</span> log-odds per unit), so the indirect path <strong>opposes</strong> the direct protective effect of quitting. This produces the clinically important near-zero ATE documented by <span class="citation" data-cites="hu2018">Hu et al. (<a href="#ref-hu2018" role="doc-biblioref">2018</a>)</span>: the direct benefit of cessation is substantially cancelled in the short term by weight gain.</p>
+<p><strong>Key difference 2 — outcome scale.</strong> In the linear SEM, ACME and ADE are in units of <span class="math inline">\(Y\)</span> and add to TE on the same scale. In the logistic SEM, the structural coefficients (<span class="math inline">\(-0.30\)</span>, <span class="math inline">\(+0.20\)</span>) are on the log-odds scale, but mediation package and g-formula report results on the probability (risk difference) scale. The conversion requires the delta method: <span class="math inline">\(\Delta P \approx P(1-P) \cdot \Delta\eta \approx 0.05 \times 0.95 \times 0.30 \approx 0.014\)</span>, which explains why the ADE of <span class="math inline">\(\approx -0.012\)</span> looks very different from <span class="math inline">\(-0.30\)</span>.</p>
+<p><strong>Key difference 3 — confounding.</strong> In this linear example <span class="math inline">\(D\)</span> is randomised, so no confounder adjustment is needed. In the smoking example, quitting is self-selected (older, more active patients quit more), introducing confounding that must be handled by including <span class="math inline">\(\mathbf{C}\)</span> in both the mediator and outcome models. The g-formula standardises over the observed confounder distribution to remove this selection bias.</p>
+<p><strong>What all three methods tell us in both examples:</strong> conditioning on the mediator when estimating the total effect of <span class="math inline">\(D\)</span> is always wrong — it blocks the <span class="math inline">\(D \rightarrow M \rightarrow Y\)</span> path. The g-formula and mediation package resolve this by explicitly modelling the mediator distribution under intervention and integrating over it, which is exactly what <span class="citation" data-cites="feuerriegel2024">Feuerriegel et al. (<a href="#ref-feuerriegel2024" role="doc-biblioref">2024</a>)</span> call for when embedding ML in a causal framework.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="adjustment-set-identification-from-a-dag" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="adjustment-set-identification-from-a-dag"><span class="header-section-number">6</span> Adjustment set identification from a DAG</h2>
+<p>Given a complex DAG, <code>dagitty</code> can identify the minimal sufficient adjustment set to estimate the causal effect of treatment <span class="math inline">\(T\)</span> on outcome <span class="math inline">\(Y\)</span>.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dag <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">"dag {</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="st">  X1 -&gt; X2</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="st">  X1 -&gt; Y</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="st">  X3 -&gt; X2</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="st">  X2 -&gt; Y</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="st">  X2 -&gt; T -&gt; Y</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="st">  X3 -&gt; T</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(dag) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="at">X1=</span><span class="dv">3</span>, <span class="at">X2=</span><span class="dv">3</span>, <span class="at">X3=</span><span class="dv">1</span>, <span class="at">T=</span><span class="dv">2</span>, <span class="at">Y=</span><span class="dv">4</span>),</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="at">X1=</span><span class="dv">1</span>, <span class="at">X2=</span><span class="dv">2</span>, <span class="at">X3=</span><span class="dv">2</span>, <span class="at">T=</span><span class="dv">3</span>, <span class="at">Y=</span><span class="dv">3</span>)</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="fu">exposures</span>(dag) <span class="ot">&lt;-</span> <span class="st">"T"</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="fu">outcomes</span>(dag)  <span class="ot">&lt;-</span> <span class="st">"Y"</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="causal_structures_files/figure-html/dag-adjustment-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Complex DAG with multiple paths. dagitty identifies which variables to adjust for.</figcaption>
+</figure>
+</div>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Minimal sufficient adjustment sets:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Minimal sufficient adjustment sets:</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">adjustmentSets</span>(dag))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>{ X1, X2 }
+{ X2, X3 }</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdag)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>tidy_dag <span class="ot">&lt;-</span> <span class="fu">tidy_dagitty</span>(dag)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag_adjustment_set</span>(tidy_dag, <span class="at">node_size =</span> <span class="dv">14</span>, <span class="at">text_col =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Minimal adjustment sets for T → Y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="causal_structures_files/figure-html/ggdag-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Adjustment set highlighted: variables needed to block all back-door paths from T to Y.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="random-vs-non-random-assignment" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="random-vs-non-random-assignment"><span class="header-section-number">7</span> Random vs non-random assignment</h2>
+<p>When treatment is randomly assigned, naive regression recovers the causal effect without adjustment. When assignment depends on a covariate <span class="math inline">\(x\)</span> (non-random), matching or adjustment is required.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">10</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>n       <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>x       <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="fl">5.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>p.ov    <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>D.rand  <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">runif</span>(n) <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>D.nonr  <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(x <span class="sc">&lt;</span> <span class="dv">5</span>,</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">ifelse</span>(<span class="fu">runif</span>(n) <span class="sc">&gt;</span> p.ov, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">ifelse</span>(<span class="fu">runif</span>(n) <span class="sc">&gt;</span> p.ov, <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>rho_r <span class="ot">&lt;-</span> <span class="dv">5</span>; alpha_r <span class="ot">&lt;-</span> <span class="dv">1</span>; gamma_r <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>y.rand <span class="ot">&lt;-</span> alpha_r <span class="sc">+</span> rho_r <span class="sc">*</span> D.rand <span class="sc">+</span> gamma_r <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fl">1.5</span>)</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>y.nonr <span class="ot">&lt;-</span> alpha_r <span class="sc">+</span> rho_r <span class="sc">*</span> D.nonr <span class="sc">+</span> gamma_r <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fl">1.5</span>)</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>lm.rand <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.rand <span class="sc">~</span> D.rand <span class="sc">+</span> x)</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>lm.nonr <span class="ot">&lt;-</span> <span class="fu">lm</span>(y.nonr <span class="sc">~</span> D.nonr <span class="sc">+</span> x)</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>df_r <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">D =</span> D.nonr, <span class="at">y =</span> y.nonr, <span class="at">x =</span> x)</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>m_nn  <span class="ot">&lt;-</span> <span class="fu">matchit</span>(D <span class="sc">~</span> x, <span class="at">data =</span> df_r, <span class="at">method =</span> <span class="st">"optimal"</span>)</span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>m_cem <span class="ot">&lt;-</span> <span class="fu">matchit</span>(D <span class="sc">~</span> x, <span class="at">data =</span> df_r, <span class="at">method =</span> <span class="st">"cem"</span>)</span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">Setting  =</span> <span class="fu">c</span>(<span class="st">"True effect"</span>,</span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Random assignment (regression)"</span>,</span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Non-random (regression, full data)"</span>,</span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Non-random (nearest-neighbour match)"</span>,</span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Non-random (CEM)"</span>),</span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">Estimate =</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a>    rho_r,</span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(lm.rand)[<span class="st">"D.rand"</span>],</span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(lm.nonr)[<span class="st">"D.nonr"</span>],</span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(<span class="fu">lm</span>(y <span class="sc">~</span> D <span class="sc">+</span> x, <span class="fu">match.data</span>(m_nn,  <span class="at">drop.unmatched=</span><span class="cn">TRUE</span>)))[<span class="st">"D"</span>],</span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coef</span>(<span class="fu">lm</span>(y <span class="sc">~</span> D <span class="sc">+</span> x, <span class="fu">match.data</span>(m_cem, <span class="at">drop.unmatched=</span><span class="cn">TRUE</span>),</span>
+<span id="cb42-33"><a href="#cb42-33" aria-hidden="true" tabindex="-1"></a>            <span class="at">weights =</span> <span class="fu">match.data</span>(m_cem, <span class="at">drop.unmatched=</span><span class="cn">TRUE</span>)<span class="sc">$</span>weights))[<span class="st">"D"</span>]</span>
+<span id="cb42-34"><a href="#cb42-34" aria-hidden="true" tabindex="-1"></a>  ), <span class="dv">3</span>)</span>
+<span id="cb42-35"><a href="#cb42-35" aria-hidden="true" tabindex="-1"></a>), <span class="at">caption =</span> <span class="st">"Effect of random vs non-random assignment on ATE recovery"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Effect of random vs non-random assignment on ATE recovery</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Setting</th>
+<th style="text-align: right;">Estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">True effect</td>
+<td style="text-align: right;">5.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Random assignment (regression)</td>
+<td style="text-align: right;">4.468</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-random (regression, full data)</td>
+<td style="text-align: right;">4.722</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Non-random (nearest-neighbour match)</td>
+<td style="text-align: right;">4.783</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-random (CEM)</td>
+<td style="text-align: right;">4.920</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr>
+</section>
+<section id="references" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="references"><span class="header-section-number">8</span> References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-angrist2009" class="csl-entry" role="listitem">
+Angrist, Joshua D., and Jörn-Steffen Pischke. 2009. <em>Mostly Harmless Econometrics</em>. Princeton University Press.
+</div>
+<div id="ref-brumback2022" class="csl-entry" role="listitem">
+Brumback, Babette A. 2022. <em>Fundamentals of Causal Inference with <span>R</span></em>. Chapman; Hall/CRC.
+</div>
+<div id="ref-chatton2024" class="csl-entry" role="listitem">
+Chatton, Arthur, and Julia M. Rohrer. 2024. <span>“The Causal Cookbook: Recipes for Propensity Scores, g-Computation, and Doubly Robust Standardization.”</span> <em>Advances in Methods and Practices in Psychological Science</em> 7 (1). <a href="https://doi.org/10.1177/25152459241236149">https://doi.org/10.1177/25152459241236149</a>.
+</div>
+<div id="ref-chernozhukov2024" class="csl-entry" role="listitem">
+Chernozhukov, Victor, Christian Hansen, Nathan Kallus, Martin Spindler, and Vasilis Syrgkanis. 2024. <span>“Applied Causal Inference Powered by <span>ML</span> and <span>AI</span>.”</span> <em>arXiv Preprint arXiv:2403.02467</em>.
+</div>
+<div id="ref-feuerriegel2024" class="csl-entry" role="listitem">
+Feuerriegel, Stefan, Dennis Frauen, Valentyn Melnychuk, Jonas Schweisthal, Konstantin Hess, Alicia Curth, Stefan Bauer, Niki Kilbertus, Isaac S. Kohane, and Uri Shalit. 2024. <span>“Causal Machine Learning for Predicting Treatment Outcomes.”</span> <em>Nature Medicine</em> 30 (4): 958–68. <a href="https://doi.org/10.1038/s41591-024-02902-1">https://doi.org/10.1038/s41591-024-02902-1</a>.
+</div>
+<div id="ref-hu2018" class="csl-entry" role="listitem">
+Hu, Yang, Geng Zong, Gang Liu, Molin Wang, Bernard Rosner, An Pan, Walter C. Willett, JoAnn E. Manson, Frank B. Hu, and Qi Sun. 2018. <span>“Smoking Cessation, Weight Change, Type 2 Diabetes, and Mortality.”</span> <em>New England Journal of Medicine</em> 379 (7): 623–32. <a href="https://doi.org/10.1056/NEJMoa1803626">https://doi.org/10.1056/NEJMoa1803626</a>.
+</div>
+<div id="ref-huber2023" class="csl-entry" role="listitem">
+Huber, Martin. 2023. <em>Causal Analysis: Impact Evaluation and Causal Machine Learning with Applications in r</em>. MIT Press.
+</div>
+<div id="ref-huntington2021" class="csl-entry" role="listitem">
+Huntington-Klein, Nick. 2021. <em>The Effect: An Introduction to Research Design and Causality</em>. Chapman; Hall/CRC.
+</div>
+<div id="ref-imai2010" class="csl-entry" role="listitem">
+Imai, Kosuke, Luke Keele, and Dustin Tingley. 2010. <span>“A General Approach to Causal Mediation Analysis.”</span> <em>Psychological Methods</em> 15 (4): 309–34. <a href="https://doi.org/10.1037/a0020761">https://doi.org/10.1037/a0020761</a>.
+</div>
+<div id="ref-pearl2016" class="csl-entry" role="listitem">
+Pearl, Judea, Madelyn Glymour, and Nicholas P. Jewell. 2016. <em>Causal Inference in Statistics: A Primer</em>. John Wiley &amp; Sons.
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Causal Machine Learning - R Notebook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      Causal Machine Learning
+      </li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Causal Machine Learning</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Causal Inference Methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./icp_illustration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Invariant Causal Prediction (ICP)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./causal_structures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Causal Structures &amp; Matching</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Causal ML Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./smoking_bmi_diabetes_causal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Smoking, BMI &amp; Diabetes</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#simple-chain" id="toc-simple-chain" class="nav-link" data-scroll-target="#simple-chain"><span class="header-section-number">2</span> Simple chain</a></li>
+  <li><a href="#confounder-pretreatment-covariate" id="toc-confounder-pretreatment-covariate" class="nav-link" data-scroll-target="#confounder-pretreatment-covariate"><span class="header-section-number">3</span> Confounder (Pretreatment covariate)</a>
+  <ul class="collapse">
+  <li><a href="#simulated-data" id="toc-simulated-data" class="nav-link" data-scroll-target="#simulated-data"><span class="header-section-number">3.1</span> Simulated data</a></li>
+  <li><a href="#match-data-manually-and-do-regression-adjustment" id="toc-match-data-manually-and-do-regression-adjustment" class="nav-link" data-scroll-target="#match-data-manually-and-do-regression-adjustment"><span class="header-section-number">3.2</span> match data manually and do regression adjustment</a></li>
+  <li><a href="#use-matchit-package." id="toc-use-matchit-package." class="nav-link" data-scroll-target="#use-matchit-package."><span class="header-section-number">3.3</span> Use MatchIt package.</a></li>
+  <li><a href="#stratify-based-on-u-and-find-weighted-average.-compare-to-regression." id="toc-stratify-based-on-u-and-find-weighted-average.-compare-to-regression." class="nav-link" data-scroll-target="#stratify-based-on-u-and-find-weighted-average.-compare-to-regression."><span class="header-section-number">3.4</span> Stratify based on U and find weighted average. Compare to regression.</a></li>
+  <li><a href="#estimate-ate-using-g-computation-see-chatton-cookbook-or-brumback-ch-6.1.2" id="toc-estimate-ate-using-g-computation-see-chatton-cookbook-or-brumback-ch-6.1.2" class="nav-link" data-scroll-target="#estimate-ate-using-g-computation-see-chatton-cookbook-or-brumback-ch-6.1.2"><span class="header-section-number">3.5</span> Estimate ATE using g-computation (see Chatton cookbook, or Brumback Ch 6.1.2 )</a></li>
+  <li><a href="#estimate-ate-using-regression-and-huber-book-p.-79." id="toc-estimate-ate-using-regression-and-huber-book-p.-79." class="nav-link" data-scroll-target="#estimate-ate-using-regression-and-huber-book-p.-79."><span class="header-section-number">3.6</span> Estimate ATE using regression and Huber book p.&nbsp;79.</a></li>
+  <li><a href="#partialling-out-approach" id="toc-partialling-out-approach" class="nav-link" data-scroll-target="#partialling-out-approach"><span class="header-section-number">3.7</span> Partialling out approach</a></li>
+  <li><a href="#discovery-from-the-observed-data" id="toc-discovery-from-the-observed-data" class="nav-link" data-scroll-target="#discovery-from-the-observed-data"><span class="header-section-number">3.8</span> Discovery from the observed data</a></li>
+  </ul></li>
+  <li><a href="#collider" id="toc-collider" class="nav-link" data-scroll-target="#collider"><span class="header-section-number">4</span> Collider</a></li>
+  <li><a href="#posttreatment-covariates-mediation" id="toc-posttreatment-covariates-mediation" class="nav-link" data-scroll-target="#posttreatment-covariates-mediation"><span class="header-section-number">5</span> Posttreatment covariates (mediation)</a></li>
+  <li><a href="#random-versus-non-random-assignment-in-regression-and-matching" id="toc-random-versus-non-random-assignment-in-regression-and-matching" class="nav-link" data-scroll-target="#random-versus-non-random-assignment-in-regression-and-matching"><span class="header-section-number">6</span> Random versus Non-Random assignment in regression and Matching</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">R Notebook</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>Generate simulated data from simple causal structures, analyze the data using adjusted and non-adjusted formulas. Also apply causal discovery using <code>bnlearn</code>.</p>
+<ul>
+<li>Pearl, J., Glymour, M., &amp; Jewell, N. P. (2016). Causal inference in statistics: A primer. John Wiley &amp; Sons.</li>
+<li>Huber, M. (2023). Causal analysis: Impact evaluation and Causal Machine Learning with applications in R. MIT Press.</li>
+<li>Huntington-Klein, N. (2021). The effect: An introduction to research design and causality. Chapman and Hall/CRC.</li>
+<li>Chernozhukov, V., Hansen, C., Kallus, N., Spindler, M., &amp; Syrgkanis, V. (2024). Applied causal inference powered by ML and AI. arXiv preprint arXiv:2403.02467.</li>
+<li>Angrist and Pischke (2009), Mostly Harmless Econometrics</li>
+<li>Brumback (2022), Fundamentals of Causal Inference with R</li>
+<li>Chatton, A., &amp; Rohrer, J. M. (2024). The causal cookbook: Recipes for propensity scores, g-computation, and doubly robust standardization. Advances in Methods and Practices in Psychological Science, 7(1), 25152459241236149.</li>
+</ul>
+</section>
+<section id="simple-chain" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="simple-chain"><span class="header-section-number">2</span> Simple chain</h2>
+<p>Simple causal chain: D-&gt;Y. We want to estimate the causal effect of D on Y.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">warning =</span> <span class="cn">FALSE</span>, <span class="at">message =</span> <span class="cn">FALSE</span>,<span class="at">echo=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'igraph'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    decompose, spectrum</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:base':
+
+    union</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dagitty'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:igraph':
+
+    edges</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#g=make_graph(c("D", "Y"), directed = TRUE)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(g)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="st">D [pos="0,.1"]</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="st">Y [pos=".2,.1"]</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="st">D -&gt; Y </span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="192"></p>
+</div>
+</div>
+</section>
+<section id="confounder-pretreatment-covariate" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="confounder-pretreatment-covariate"><span class="header-section-number">3</span> Confounder (Pretreatment covariate)</h2>
+<p>Treatment selection bias (Confounder) : D-&gt;Y, U-&gt;D, U-&gt;Y. In order to estimate the causal effect of D on Y, we need to close the back door path D&lt;-U-&gt;Y. Condition on U to estimate the causal effect. Pearl book, p.&nbsp;62. Or as in, Angrist and Pischke (p.&nbsp;57), this is the unconditional average effect obtained by averaging all the X-specific effects weighted by the marginal distribution of X_i.</p>
+<p>When trying to find the causal effect of X on Y, we want the nodes we condition on to block any “backdoor” path in which one end has an arrow into X, because such paths may make X and Y dependent, but are obviously not transmitting causal influences from X, and if we do not block them, they will confound the effect that X has on Y.We condition on backdoor paths so as to fulfill our first requirement. However, we don’t want to condition on any nodes that are descendants of X. Descendants of X would be affected by an intervention on X and might themselves affect Y; conditioning</p>
+<p>We search for an observed variable that fits the backdoor criterion from D to Y. A brief examination of the graph shows that U, which is not a descendant of D, also blocks the backdoor path D ← U → Y. Therefore, U meets the backdoor criterion. So long as the causal story conforms to the graph. adjusting for U will give us the causal effect of D on Y. Using the adjustment formula, we find</p>
+<p><span class="math display">\[ P(Y=y|do(D)) =\sum_U P(Y=y|D=d,U=u) P(U=u) \]</span></p>
+<p>and the average treatment effect (ATE) is</p>
+<p><span class="math display">\[ ATE= P(Y=y|do(D=1)) -  P(Y=y|do(D=0)) \]</span></p>
+<p>When confounder is continuous use regression</p>
+<p><span class="math display">\[ y = \beta_0+\beta_D D +\beta_U U +\epsilon \]</span> then the estimated <span class="math inline">\(\beta_D\)</span> is the causal effect of U on Y. Angrist and Pischke (p.&nbsp;55) : regression can be seen as a matching estimator, capturing an average causal effect, much as the adjustment formula does.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="st">D [pos="0,.1"]</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">Y [pos=".2,.1"]</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">U [pos=".1,.2"]</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">D -&gt; Y </span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="st">D &lt;-U -&gt; Y </span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="192"></p>
+</div>
+</div>
+<section id="simulated-data" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="simulated-data"><span class="header-section-number">3.1</span> Simulated data</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>n<span class="ot">=</span><span class="dv">200</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>sd1<span class="ot">=</span><span class="fl">1.5</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>sd2<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>sdU<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>e1<span class="ot">=</span><span class="fu">rnorm</span>(n,<span class="dv">0</span>,sd1)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>e2<span class="ot">=</span><span class="fu">rnorm</span>(n,<span class="dv">0</span>,sd2)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>U<span class="ot">=</span><span class="fu">rnorm</span>(n,<span class="dv">0</span>,sdU)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#D=ifelse(U&gt;0.5,1,0)</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>p.overlap<span class="ot">=</span><span class="fl">0.1</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>D<span class="ot">=</span><span class="fu">ifelse</span>(U<span class="sc">&gt;</span><span class="fl">0.5</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ifelse</span>(<span class="fu">runif</span>(n)<span class="sc">&gt;</span>p.overlap,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ifelse</span>(<span class="fu">runif</span>(n)<span class="sc">&gt;</span>p.overlap,<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>rho<span class="ot">=</span><span class="dv">20</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>Y<span class="ot">=</span><span class="dv">10</span><span class="sc">+</span>rho<span class="sc">*</span>D<span class="sc">+</span><span class="dv">5</span><span class="sc">*</span>U<span class="sc">+</span>e1</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co"># effect of D with no adjustment</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>y1<span class="ot">=</span>Y[D<span class="sc">==</span><span class="dv">1</span>]</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>y0<span class="ot">=</span>Y[D<span class="sc">==</span><span class="dv">0</span>]</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'non-adjsted ATE'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "non-adjsted ATE"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">ate.nonadjusted=</span><span class="fu">mean</span>(y1)<span class="sc">-</span><span class="fu">mean</span>(y0))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 25.68462</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'check whether x is balanced. mean of U with D=0 and mean of U with D=1'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "check whether x is balanced. mean of U with D=0 and mean of U with D=1"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(U[D<span class="sc">==</span><span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.4195538</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(U[D<span class="sc">==</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6444659</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(U[D<span class="sc">==</span><span class="dv">1</span>],<span class="at">col=</span><span class="st">'red'</span>,<span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(U[D<span class="sc">==</span><span class="dv">0</span>],<span class="at">col=</span><span class="st">'green'</span>,<span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>,<span class="dv">5</span>))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(U<span class="sc">~</span><span class="fu">factor</span>(D))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="match-data-manually-and-do-regression-adjustment" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="match-data-manually-and-do-regression-adjustment"><span class="header-section-number">3.2</span> match data manually and do regression adjustment</h3>
+<p>THIS DOES NOT SEEM TO BE MAKING TOO MUCH DIFFERENCE OVER SIMPLE CONTROLLING APPROACH. SEE RANDOM ASSIGNMENT SECTION, IN WHICH MATCHING PROVIDES BIGGER IMPROVEMENT.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>ind0<span class="ot">=</span><span class="fu">which</span>(D<span class="sc">==</span><span class="dv">0</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>ind1<span class="ot">=</span><span class="fu">which</span>(D<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>ind.match0<span class="ot">=</span>ind0[U[D<span class="sc">==</span><span class="dv">0</span>]<span class="sc">&lt;</span>.<span class="dv">25</span><span class="sc">&amp;</span>U[D<span class="sc">==</span><span class="dv">0</span>]<span class="sc">&gt;-</span><span class="fl">0.75</span>]</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>ind.match1<span class="ot">=</span>ind1[U[D<span class="sc">==</span><span class="dv">1</span>]<span class="sc">&lt;</span>.<span class="dv">25</span><span class="sc">&amp;</span>U[D<span class="sc">==</span><span class="dv">1</span>]<span class="sc">&gt;-</span><span class="fl">0.75</span>]</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'means of matched covariates'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "means of matched covariates"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(U[ind.match0])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.2667269</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(U[ind.match1])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.343174</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matched data</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>df<span class="ot">=</span><span class="fu">data.frame</span>(<span class="at">U=</span>U,<span class="at">Y=</span>Y,<span class="at">D=</span>D)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>df.matched<span class="ot">=</span>df[<span class="fu">c</span>(ind.match0,ind.match1),]</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df)<span class="sc">+</span><span class="fu">geom_histogram</span>(<span class="fu">aes</span>(U,<span class="at">fill=</span><span class="fu">factor</span>(D)),<span class="at">alpha=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df.matched)<span class="sc">+</span><span class="fu">geom_histogram</span>(<span class="fu">aes</span>(U,<span class="at">fill=</span><span class="fu">factor</span>(D)),<span class="at">alpha=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(U<span class="sc">~</span><span class="fu">factor</span>(D),df,<span class="at">main=</span><span class="st">'unmatched covariate'</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(U<span class="sc">~</span><span class="fu">factor</span>(D),df.matched,<span class="at">main=</span><span class="st">'matched covariate'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit model </span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>lm.matched<span class="ot">=</span><span class="fu">lm</span>(Y<span class="sc">~</span>D<span class="sc">+</span>U,df.matched)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'true causal effect'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "true causal effect"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(rho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 20</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'estimate with nonrandom assignment and matched covariate'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "estimate with nonrandom assignment and matched covariate"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">coef</span>(lm.matched)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+20.26555 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.matched)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Y ~ D + U, data = df.matched)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.9014 -0.9380 -0.2063  0.9708  3.5738 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  10.0437     0.2336  42.996  &lt; 2e-16 ***
+D            20.2656     0.5282  38.368  &lt; 2e-16 ***
+U             5.0332     0.5883   8.555 1.56e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.406 on 71 degrees of freedom
+Multiple R-squared:  0.9548,    Adjusted R-squared:  0.9535 
+F-statistic: 750.1 on 2 and 71 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'check whether x is balanced. mean of U with D=0 and mean of U with D=1'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "check whether x is balanced. mean of U with D=0 and mean of U with D=1"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(df.matched,<span class="fu">mean</span>(U[D<span class="sc">==</span><span class="dv">0</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.2667269</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(df.matched,<span class="fu">mean</span>(U[D<span class="sc">==</span><span class="dv">1</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.343174</code></pre>
+</div>
+</div>
+</section>
+<section id="use-matchit-package." class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="use-matchit-package."><span class="header-section-number">3.3</span> Use MatchIt package.</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>m_out <span class="ot">&lt;-</span> <span class="fu">matchit</span>(D <span class="sc">~</span> U,<span class="at">data =</span> df, <span class="at">method =</span> <span class="st">"optimal"</span>)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>m_out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>A `matchit` object
+ - method: 1:1 optimal pair matching
+ - distance: Propensity score
+             - estimated with logistic regression
+ - number of obs.: 200 (original), 142 (matched)
+ - target estimand: ATT
+ - covariates: U</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m_out, <span class="at">type =</span> <span class="st">"density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>m_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_out,<span class="at">drop.unmatched =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">'total of '</span>, <span class="fu">dim</span>(m_data)[<span class="dv">1</span>], <span class="st">' matched data. 1:1 matching, thus, number of controls = treatment = '</span>, <span class="fu">dim</span>(m_data)[<span class="dv">1</span>]<span class="sc">/</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "total of 142 matched data. 1:1 matching, thus, number of controls = treatment = 71"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check matched points. to compare to the original data, don't drop unmatched</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>m_data_keep<span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_out,<span class="at">drop.unmatched =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>ind_control_match<span class="ot">=</span>m_data_keep<span class="sc">$</span>D<span class="sc">==</span><span class="dv">0</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>( m_data_keep<span class="sc">$</span>subclass)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>n_control_match<span class="ot">=</span><span class="fu">length</span>(<span class="fu">which</span>(ind_control_match))</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>ind_control_drop<span class="ot">=</span>m_data_keep<span class="sc">$</span>D<span class="sc">==</span><span class="dv">0</span> <span class="sc">&amp;</span> <span class="fu">is.na</span>( m_data_keep<span class="sc">$</span>subclass)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>n_control_drop<span class="ot">=</span><span class="fu">length</span>(<span class="fu">which</span>(ind_control_drop))</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>ind_treat<span class="ot">=</span>m_data_keep<span class="sc">$</span>D<span class="sc">==</span><span class="dv">1</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>n_treat<span class="ot">=</span><span class="fu">length</span>(<span class="fu">which</span>(ind_treat))</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(D<span class="sc">~</span>distance,m_data_keep[ind_control_drop,],<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),<span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">2</span>),<span class="at">col=</span><span class="st">'red'</span>)</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(D<span class="sc">~</span>distance,m_data_keep[ind_control_match,],<span class="at">col=</span><span class="st">'green'</span>)</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(D<span class="sc">~</span>distance,m_data_keep[ind_treat,],<span class="at">col=</span><span class="st">'orange'</span>)</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topright'</span>,<span class="at">legend=</span><span class="fu">c</span>(<span class="st">'dropped control'</span>,<span class="st">'matched control'</span>,<span class="st">'treatment'</span>),<span class="at">col=</span><span class="fu">c</span>(<span class="st">'red'</span>,<span class="st">'green'</span>,<span class="st">'orange'</span>),<span class="at">lty=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit model </span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>lm.matched2<span class="ot">=</span><span class="fu">lm</span>(Y<span class="sc">~</span>D<span class="sc">+</span>U,m_data)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>(<span class="fu">coef</span>(lm.matched2)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+20.31057 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CEM</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>m_out_cem <span class="ot">&lt;-</span> <span class="fu">matchit</span>(D <span class="sc">~</span> U,<span class="at">data =</span> df, <span class="at">method =</span> <span class="st">"cem"</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>m_out_cem</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>A `matchit` object
+ - method: Coarsened exact matching
+ - number of obs.: 200 (original), 197 (matched)
+ - target estimand: ATT
+ - covariates: U</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m_out_cem, <span class="at">type =</span> <span class="st">"density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>m_data_cem <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_out_cem,<span class="at">drop.unmatched =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fit model </span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>lm.matched3<span class="ot">=</span><span class="fu">lm</span>(Y<span class="sc">~</span>D<span class="sc">+</span>U,m_data_cem,<span class="at">weights =</span> m_data_cem<span class="sc">$</span>weights)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>(<span class="fu">coef</span>(lm.matched3)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+20.41207 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot covariates</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(U<span class="sc">~</span><span class="fu">factor</span>(D),df,<span class="at">main=</span><span class="st">'unmatched covariate'</span>)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(U<span class="sc">~</span><span class="fu">factor</span>(D),m_data,<span class="at">main=</span><span class="st">'nn matched covariate'</span>)</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(U<span class="sc">~</span><span class="fu">factor</span>(D),m_data_cem,<span class="at">main=</span><span class="st">'cem matched covariate'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-6-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="stratify-based-on-u-and-find-weighted-average.-compare-to-regression." class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="stratify-based-on-u-and-find-weighted-average.-compare-to-regression."><span class="header-section-number">3.4</span> Stratify based on U and find weighted average. Compare to regression.</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Ulevel<span class="ot">=</span><span class="fu">cut</span>(df<span class="sc">$</span>U,<span class="at">breaks=</span><span class="fu">quantile</span>(df<span class="sc">$</span>U,<span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)))</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>df<span class="ot">=</span><span class="fu">na.omit</span>(df)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>df.means<span class="ot">=</span>df <span class="sc">%&gt;%</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Ulevel,D) <span class="sc">%&gt;%</span></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_Y =</span> <span class="fu">mean</span>(Y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),<span class="at">count=</span><span class="fu">n</span>())</span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(df.means)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 4
+# Groups:   Ulevel [4]
+  Ulevel               D mean_Y count
+  &lt;fct&gt;            &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;
+1 (-3.01,-0.739]       0   3.37    40
+2 (-3.01,-0.739]       1  23.7      9
+3 (-0.739,-0.0877]     0   7.97    43
+4 (-0.739,-0.0877]     1  28.5      7
+5 (-0.0877,0.633]      0  10.8     37
+6 (-0.0877,0.633]      1  32.6     13
+7 (0.633,3.81]         0  17.6      8
+8 (0.633,3.81]         1  36.7     42</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>N0<span class="ot">=</span><span class="fu">length</span>(df<span class="sc">$</span>Y[df<span class="sc">$</span>D<span class="sc">==</span><span class="dv">0</span>])</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co">#N1=length(df$Y[df$D==1])</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co">#ate_weighted=(df.means$mean_Y[df.means$D==1]%*%df.means$count[df.means$D==1])/N1-(df.means$mean_Y[df.means$D==0]%*%df.means$count[df.means$D==0])/N0</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>diff_means<span class="ot">=</span>df.means<span class="sc">$</span>mean_Y[df.means<span class="sc">$</span>D<span class="sc">==</span><span class="dv">1</span>]<span class="sc">-</span>df.means<span class="sc">$</span>mean_Y[df.means<span class="sc">$</span>D<span class="sc">==</span><span class="dv">0</span>]</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>count_diff<span class="ot">=</span>df.means<span class="sc">$</span>count[df.means<span class="sc">$</span>D<span class="sc">==</span><span class="dv">0</span>]</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>ate_weighted<span class="ot">=</span>(diff_means)<span class="sc">%*%</span>count_diff<span class="sc">/</span>N0</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ate_weighted)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]
+[1,] 20.74061</code></pre>
+</div>
+</div>
+</section>
+<section id="estimate-ate-using-g-computation-see-chatton-cookbook-or-brumback-ch-6.1.2" class="level3" data-number="3.5">
+<h3 data-number="3.5" class="anchored" data-anchor-id="estimate-ate-using-g-computation-see-chatton-cookbook-or-brumback-ch-6.1.2"><span class="header-section-number">3.5</span> Estimate ATE using g-computation (see Chatton cookbook, or Brumback Ch 6.1.2 )</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>D<span class="ot">=</span><span class="fu">factor</span>(df<span class="sc">$</span>D)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">glm</span>(D<span class="sc">~</span>U, <span class="at">data =</span> df, <span class="at">family=</span>binomial)<span class="sc">$</span>fitted.values</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>omega <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>D<span class="sc">==</span><span class="dv">1</span>, <span class="dv">1</span><span class="sc">/</span>e, <span class="dv">1</span><span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>e))</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(omega)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.027   1.205   1.422   2.537   1.765  52.948 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model returns the ATE (risk difference)</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>msm_RD <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y<span class="sc">~</span>D, <span class="at">weights =</span> omega, <span class="at">data=</span>df)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>msm_RD<span class="sc">$</span>coef[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      D1 
+12.51548 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a logistic regression model predicting Y from the relevant confounders</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">lm</span>(Y <span class="sc">~</span> D<span class="sc">+</span>U, <span class="at">data =</span> df)</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>A1Data <span class="ot">&lt;-</span> A0Data <span class="ot">&lt;-</span> df</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="co"># In one world A equals 1 for everyone, in the other one it equals 0 for everyone</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="co"># The rest of the data stays as is (for now)</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>A1Data<span class="sc">$</span>D <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="dv">1</span>); A0Data<span class="sc">$</span>D <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="dv">0</span>)</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>Y_A1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(Q, A1Data, <span class="at">type=</span><span class="st">"response"</span>) </span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict Y if nobody attends</span></span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>Y_A0 <span class="ot">&lt;-</span> <span class="fu">predict</span>(Q, A0Data, <span class="at">type=</span><span class="st">"response"</span>) </span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Taking a look at the predictions</span></span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">Y_A1=</span><span class="fu">head</span>(Y_A1), <span class="at">Y_A0=</span><span class="fu">head</span>(Y_A0), <span class="at">TRUE_Y=</span><span class="fu">head</span>(df<span class="sc">$</span>Y)) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Y_A1  Y_A0 TRUE_Y
+1 35.66 15.30  34.43
+2 39.77 19.41  39.75
+3 27.27  6.92   5.73
+4 28.33  7.98  10.44
+5 28.21  7.85   8.41
+6 28.41  8.05   6.89</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean outcomes in the two worlds</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>pred_A1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y_A1); pred_A0 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Y_A0)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ATE (risk difference)</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>RD_gcomp <span class="ot">&lt;-</span> pred_A1 <span class="sc">-</span> pred_A0</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(RD_gcomp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 20.35746</code></pre>
+</div>
+</div>
+</section>
+<section id="estimate-ate-using-regression-and-huber-book-p.-79." class="level3" data-number="3.6">
+<h3 data-number="3.6" class="anchored" data-anchor-id="estimate-ate-using-regression-and-huber-book-p.-79."><span class="header-section-number">3.6</span> Estimate ATE using regression and Huber book p.&nbsp;79.</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>lm.ate<span class="ot">=</span><span class="fu">lm</span>(Y<span class="sc">~</span>U<span class="sc">+</span>D)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm.ate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Y ~ U + D)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.2410 -0.9171 -0.1387  0.8733  3.6790 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   9.9298     0.1300   76.38   &lt;2e-16 ***
+U             5.0140     0.1047   47.87   &lt;2e-16 ***
+D            20.3496     0.2336   87.10   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.39 on 197 degrees of freedom
+Multiple R-squared:  0.9891,    Adjusted R-squared:  0.989 
+F-statistic:  8969 on 2 and 197 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'adjusted ATE'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "adjusted ATE"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">ate.adjusted1=</span><span class="fu">coef</span>(lm.ate)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+20.34961 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co">#1.fit separate models</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>lm.ate1<span class="ot">=</span><span class="fu">lm</span>(Y<span class="sc">~</span>U,<span class="at">subset=</span>(D<span class="sc">==</span><span class="dv">1</span>))</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>lm.ate0<span class="ot">=</span><span class="fu">lm</span>(Y<span class="sc">~</span>U,<span class="at">subset=</span>(D<span class="sc">==</span><span class="dv">0</span>))</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>n1<span class="ot">=</span><span class="fu">sum</span>(D<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>n0<span class="ot">=</span><span class="fu">sum</span>(D<span class="sc">==</span><span class="dv">0</span>)</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>mu1<span class="ot">=</span><span class="fu">coef</span>(lm.ate1)[<span class="dv">1</span>]</span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>mu0<span class="ot">=</span><span class="fu">coef</span>(lm.ate0)[<span class="dv">1</span>]</span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Y<span class="sc">~</span>U)</span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm.ate1)</span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm.ate0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'using the adjustment formula with two treatment values-difference in means gives incorrect result'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "using the adjustment formula with two treatment values-difference in means gives incorrect result"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">ate.adjusted2=</span>mu1<span class="sc">-</span>mu0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept) 
+   20.34738 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co">#2. propensity score approach - see Huber p. 113</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="co">#mean(fitted(lm.ate1))-mean(fitted(lm.ate0))</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>propen.scores<span class="ot">=</span><span class="fu">glm</span>(D<span class="sc">~</span>U, <span class="at">family=</span>binomial)<span class="sc">$</span>fit</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>b00<span class="ot">=</span><span class="fu">coef</span>(lm.ate0)[<span class="dv">1</span>];b01<span class="ot">=</span><span class="fu">coef</span>(lm.ate0)[<span class="dv">2</span>];b10<span class="ot">=</span><span class="fu">coef</span>(lm.ate1)[<span class="dv">1</span>];b11<span class="ot">=</span><span class="fu">coef</span>(lm.ate1)[<span class="dv">2</span>];</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>mu0x<span class="ot">=</span>b00<span class="sc">+</span>b01<span class="sc">*</span>U;mu1x<span class="ot">=</span>b10<span class="sc">+</span>b11<span class="sc">*</span>U</span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>delx<span class="ot">=</span>mu1x<span class="sc">-</span>(mu0x)<span class="sc">+</span>(Y<span class="sc">-</span>mu1x)<span class="sc">*</span>D<span class="sc">/</span>propen.scores<span class="sc">-</span>(Y<span class="sc">-</span>mu0x)<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>D)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>propen.scores)</span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>(<span class="at">ate.propen=</span><span class="fu">mean</span>(delx))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 19.55496</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co">#3. fit one model</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>ypred1<span class="ot">=</span><span class="fu">predict</span>(lm.ate,<span class="at">newdata =</span><span class="fu">data.frame</span>(<span class="at">D=</span><span class="fu">rep</span>(<span class="dv">1</span>,n),<span class="at">U=</span>U))</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>ypred0<span class="ot">=</span><span class="fu">predict</span>(lm.ate,<span class="at">newdata =</span><span class="fu">data.frame</span>(<span class="at">D=</span><span class="fu">rep</span>(<span class="dv">0</span>,n),<span class="at">U=</span>U))</span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'using the adjustment formula with two treatment values'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "using the adjustment formula with two treatment values"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">ate.adjusted2=</span><span class="fu">mean</span>(ypred1)<span class="sc">-</span><span class="fu">mean</span>(ypred0)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 20.34961</code></pre>
+</div>
+</div>
+</section>
+<section id="partialling-out-approach" class="level3" data-number="3.7">
+<h3 data-number="3.7" class="anchored" data-anchor-id="partialling-out-approach"><span class="header-section-number">3.7</span> Partialling out approach</h3>
+<p>Chern book (see p.&nbsp;35) analyze wage gap notebook. This can be applied via lasso when U is high dimensional (see DML method for gun ownership in Chern book p.260)</p>
+<p>Note that DML requires being able to accurately model the “outcome process,” i.e.&nbsp;the conditional expectation function E[𝑌 | 𝐷, 𝑋]. When the outcome process is hard to model, we might need to use propensity score (see Chern book, 5.3 Identification Using Propensity Scores and Chern book Ch 14.)</p>
+<p>Further (from Chern book 5.2 Identification by Conditioning): the overlap assumption requires that there is proper randomization or variation in 𝐷 at each value 𝑥 in the support of 𝑋. Without this condition, there are values 𝑥 in the support of 𝑋 where we cannot construct a contrast between treatment and control units.The conditional probability of receiving treatment, the propensity score, plays an important role in this approach.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model for Y</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>flex_y <span class="ot">&lt;-</span> Y<span class="sc">~</span>U</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a><span class="co"># model for D</span></span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>flex_d <span class="ot">&lt;-</span> D<span class="sc">~</span>U</span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a><span class="co"># partialling-out the linear effect of D from Y</span></span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>t_y <span class="ot">&lt;-</span> <span class="fu">lm</span>(flex_y)<span class="sc">$</span>res</span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a><span class="co"># partialling-out the linear effect of U from D</span></span>
+<span id="cb89-9"><a href="#cb89-9" aria-hidden="true" tabindex="-1"></a>t_d <span class="ot">&lt;-</span> <span class="fu">lm</span>(flex_d)<span class="sc">$</span>res</span>
+<span id="cb89-10"><a href="#cb89-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-11"><a href="#cb89-11" aria-hidden="true" tabindex="-1"></a><span class="co"># regression of Y on D after partialling-out the effect of U</span></span>
+<span id="cb89-12"><a href="#cb89-12" aria-hidden="true" tabindex="-1"></a>partial_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(t_y <span class="sc">~</span> t_d)</span>
+<span id="cb89-13"><a href="#cb89-13" aria-hidden="true" tabindex="-1"></a>partial_est <span class="ot">&lt;-</span> <span class="fu">summary</span>(partial_fit)<span class="sc">$</span>coef[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="discovery-from-the-observed-data" class="level3" data-number="3.8">
+<h3 data-number="3.8" class="anchored" data-anchor-id="discovery-from-the-observed-data"><span class="header-section-number">3.8</span> Discovery from the observed data</h3>
+<p>Following Huber (2024): To demonstrate the practical implementation of causal discovery algorithms in R, we load the bnlearn package (Huber, M. (2024). An introduction to causal discovery. Swiss Journal of Economics and Statistics, 160(1), 14.)</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bnlearn)</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>df.yud<span class="ot">=</span><span class="fu">data.frame</span>(Y,U,D)</span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a><span class="co"># run the PC algorithm</span></span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a>output<span class="ot">=</span><span class="fu">pc.stable</span>(df.yud,<span class="at">undirected =</span> <span class="cn">FALSE</span>) <span class="co">#Constraint-Based Learning Algorithms</span></span>
+<span id="cb90-8"><a href="#cb90-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Note that even when undirected is set to FALSE there is no guarantee that all arcs in the returned network will be directed; some arc directions are impossible to learn just from data due to score equivalence</span></span>
+<span id="cb90-9"><a href="#cb90-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-10"><a href="#cb90-10" aria-hidden="true" tabindex="-1"></a><span class="co"># to install rgraphviz</span></span>
+<span id="cb90-11"><a href="#cb90-11" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("BiocManager")</span></span>
+<span id="cb90-12"><a href="#cb90-12" aria-hidden="true" tabindex="-1"></a><span class="co">#BiocManager::install("Rgraphviz")</span></span>
+<span id="cb90-13"><a href="#cb90-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-14"><a href="#cb90-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rgraphviz)</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">graphviz.plot</span>(output, <span class="at">layout =</span> <span class="st">"dot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(learning.test)</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>dag <span class="ot">=</span> <span class="fu">hc</span>(df.yud)<span class="co">#Score-based Learning Algorithms</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="collider" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="collider"><span class="header-section-number">4</span> Collider</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="st">D [pos="0,1"]</span></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="st">Y [pos="2,1"]</span></span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="st">U [pos="1,2"]</span></span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="st">D -&gt; Y </span></span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a><span class="st">D -&gt;U &lt;- Y </span></span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(g)</span></span>
+<span id="cb93-9"><a href="#cb93-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-10"><a href="#cb93-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdag)</span>
+<span id="cb93-11"><a href="#cb93-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(g, <span class="at">text_size =</span> <span class="dv">8</span>, <span class="at">node_size =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="384"></p>
+</div>
+</div>
+<p>simulated data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>n<span class="ot">=</span><span class="dv">200</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>sd1<span class="ot">=</span><span class="fl">1.5</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>sd2<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>sdU<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>e1<span class="ot">=</span><span class="fu">rnorm</span>(n,<span class="dv">0</span>,sd1)</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>e2<span class="ot">=</span><span class="fu">rnorm</span>(n,<span class="dv">0</span>,sd2)</span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>D<span class="ot">=</span><span class="fu">ifelse</span>(<span class="fu">runif</span>(n)<span class="sc">&gt;</span><span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a>Y<span class="ot">=</span><span class="dv">10</span><span class="sc">+</span><span class="dv">20</span><span class="sc">*</span>D<span class="sc">+</span>e1</span>
+<span id="cb94-10"><a href="#cb94-10" aria-hidden="true" tabindex="-1"></a>U<span class="ot">=</span><span class="fu">ifelse</span>(D<span class="sc">==</span><span class="dv">1</span>,<span class="fu">rnorm</span>(n,<span class="dv">5</span>,sdU),<span class="fu">rnorm</span>(n,<span class="dv">10</span>,sdU))<span class="sc">+</span><span class="fl">0.5</span><span class="sc">*</span>Y</span>
+<span id="cb94-11"><a href="#cb94-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-12"><a href="#cb94-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-13"><a href="#cb94-13" aria-hidden="true" tabindex="-1"></a>df.yud<span class="ot">=</span><span class="fu">data.frame</span>(Y,U,D)</span>
+<span id="cb94-14"><a href="#cb94-14" aria-hidden="true" tabindex="-1"></a>output<span class="ot">=</span><span class="fu">pc.stable</span>(df.yud,<span class="at">undirected =</span> <span class="cn">FALSE</span>) <span class="co">#Constraint-Based Learning Algorithms</span></span>
+<span id="cb94-15"><a href="#cb94-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="480"></p>
+</div>
+</div>
+<p>Effect estimates: adjusted and non-adjusted. Huber and Pearl says not to adjust for colliders. Indeed, non-adjusted gives good results.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>lm.ate.Collide<span class="ot">=</span><span class="fu">lm</span>(Y<span class="sc">~</span>U<span class="sc">+</span>D)</span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'adjusted ATE'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "adjusted ATE"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">ate.adjusted1.CD=</span><span class="fu">coef</span>(lm.ate.Collide)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+16.01282 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>lm.ate.Collide.nonadjust<span class="ot">=</span><span class="fu">lm</span>(Y<span class="sc">~</span>D)</span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'non-adjusted ATE'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "non-adjusted ATE"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">ate.adjusted1.PT.nonadj=</span><span class="fu">coef</span>(lm.ate.Collide.nonadjust)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+20.18425 </code></pre>
+</div>
+</div>
+<p>See Chern book (p.&nbsp;151) and Angrist and Pischke (p.&nbsp;67) for some examples of collide bias, with formulas.</p>
+</section>
+<section id="posttreatment-covariates-mediation" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="posttreatment-covariates-mediation"><span class="header-section-number">5</span> Posttreatment covariates (mediation)</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="st">D [pos="0,1"]</span></span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="st">Y [pos="2,1"]</span></span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a><span class="st">U [pos="1,2"]</span></span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a><span class="st">D -&gt; Y </span></span>
+<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a><span class="st">D -&gt;U -&gt; Y </span></span>
+<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb103-8"><a href="#cb103-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="384"></p>
+</div>
+</div>
+<p>simulated data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>n<span class="ot">=</span><span class="dv">200</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>sd1<span class="ot">=</span><span class="fl">1.5</span></span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>sd2<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>sdU<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>e1<span class="ot">=</span><span class="fu">rnorm</span>(n,<span class="dv">0</span>,sd1)</span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>e2<span class="ot">=</span><span class="fu">rnorm</span>(n,<span class="dv">0</span>,sd2)</span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-8"><a href="#cb104-8" aria-hidden="true" tabindex="-1"></a>D<span class="ot">=</span><span class="fu">ifelse</span>(<span class="fu">runif</span>(n)<span class="sc">&gt;</span><span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb104-9"><a href="#cb104-9" aria-hidden="true" tabindex="-1"></a><span class="co">#U=ifelse(D==1,rnorm(n,5,sdU),rnorm(n,10,sdU))</span></span>
+<span id="cb104-10"><a href="#cb104-10" aria-hidden="true" tabindex="-1"></a>U<span class="ot">=</span><span class="dv">10</span><span class="sc">*</span>D<span class="sc">+</span>e2</span>
+<span id="cb104-11"><a href="#cb104-11" aria-hidden="true" tabindex="-1"></a>Y<span class="ot">=</span><span class="dv">10</span><span class="sc">+</span><span class="dv">20</span><span class="sc">*</span>D<span class="sc">+</span><span class="dv">5</span><span class="sc">*</span>U<span class="sc">+</span>e1</span>
+<span id="cb104-12"><a href="#cb104-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-13"><a href="#cb104-13" aria-hidden="true" tabindex="-1"></a><span class="co"># check if covariate is balanced. </span></span>
+<span id="cb104-14"><a href="#cb104-14" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(U[D<span class="sc">==</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9.873696</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(U[D<span class="sc">==</span><span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.09567112</code></pre>
+</div>
+</div>
+<p>Effect estimates: adjusted and non-adjusted. Here Huber and Pearl says not to adjust, but non-adjusted model yields weird estimates. Not clear what to do. See Pearl p.&nbsp;75. Huber p.&nbsp;69 says post treatment covariates are bad controls but does not say how we can estimate causal effect. Huntington-Klein (Chapter 8, p.&nbsp;121) says that front door paths can be good path or bad path depending on our research question E.g., in Fig 8.3 there are two front door paths: Wine -&gt; Lifespan and Wine-&gt;Drugs-&gt;Lifespan. If we are interested in the direct effect only we may classify indirect path as bad path and control for U to close that path. If we are interested in the total effect, we classify indirect path as good path and not control for U to keep that path open.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>lm.ate.PT<span class="ot">=</span><span class="fu">lm</span>(Y<span class="sc">~</span>U<span class="sc">+</span>D)</span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'adjusted ATE. gives the direct effect (=20)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "adjusted ATE. gives the direct effect (=20)"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">ate.adjusted1.PT=</span><span class="fu">coef</span>(lm.ate.PT)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+20.35692 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>lm.ate.PT.nonadjust<span class="ot">=</span><span class="fu">lm</span>(Y<span class="sc">~</span>D)</span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'non-adjusted ATE. gives the total effect (=20+5*10)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "non-adjusted ATE. gives the total effect (=20+5*10)"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>(<span class="at">ate.adjusted1.PT.nonadj=</span><span class="fu">coef</span>(lm.ate.PT.nonadjust)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+69.88321 </code></pre>
+</div>
+</div>
+<p>Study relation between regressors.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameter estimates for full and simple model:</span></span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>beta.hat <span class="ot">&lt;-</span> <span class="fu">coef</span>( lm.ate.PT )</span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a>beta.hat.simple <span class="ot">&lt;-</span> <span class="fu">coef</span>( lm.ate.PT.nonadjust )</span>
+<span id="cb116-5"><a href="#cb116-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-6"><a href="#cb116-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-7"><a href="#cb116-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Relation between regressors:</span></span>
+<span id="cb116-8"><a href="#cb116-8" aria-hidden="true" tabindex="-1"></a>delta.tilde <span class="ot">&lt;-</span> <span class="fu">coef</span>( <span class="fu">lm</span>(U <span class="sc">~</span> D) )</span>
+<span id="cb116-9"><a href="#cb116-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-10"><a href="#cb116-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-11"><a href="#cb116-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'direct effect'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "direct effect"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>beta.hat[<span class="st">"D"</span>] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+20.35692 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'indirect effect'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "indirect effect"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>beta.hat[<span class="st">"U"</span>]<span class="sc">*</span>delta.tilde[<span class="st">"D"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       U 
+49.52629 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'total effect is the sum of the two, or from simple model'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "total effect is the sum of the two, or from simple model"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>beta.hat.simple[<span class="st">"D"</span>] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+69.88321 </code></pre>
+</div>
+</div>
+</section>
+<section id="random-versus-non-random-assignment-in-regression-and-matching" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="random-versus-non-random-assignment-in-regression-and-matching"><span class="header-section-number">6</span> Random versus Non-Random assignment in regression and Matching</h2>
+<p>From Angrist and Pischke (p.22): analyze experimental data using regression to estimate causal effects. <span class="math display">\[y=\alpha+\rho D+\gamma x+ \epsilon\]</span> where <span class="math inline">\(y\)</span> is test score, <span class="math inline">\(D\)</span> is class size (small/large=1/0) and <span class="math inline">\(x\)</span> is age in 1985.</p>
+<p>For the non-random assignment case, <span class="math inline">\(D\)</span> is a function of <span class="math inline">\(X\)</span>, thus the covariates are pre-treatment (i.e., X is a confounder).</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a>n<span class="ot">=</span><span class="dv">200</span></span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a>sd1<span class="ot">=</span><span class="fl">1.5</span></span>
+<span id="cb128-3"><a href="#cb128-3" aria-hidden="true" tabindex="-1"></a>sd_x<span class="ot">=</span><span class="fl">0.5</span></span>
+<span id="cb128-4"><a href="#cb128-4" aria-hidden="true" tabindex="-1"></a>mu_x<span class="ot">=</span><span class="fl">5.5</span></span>
+<span id="cb128-5"><a href="#cb128-5" aria-hidden="true" tabindex="-1"></a>e1<span class="ot">=</span><span class="fu">rnorm</span>(n,<span class="dv">0</span>,sd1)</span>
+<span id="cb128-6"><a href="#cb128-6" aria-hidden="true" tabindex="-1"></a>x<span class="ot">=</span><span class="fu">rnorm</span>(n,mu_x,sd_x)</span>
+<span id="cb128-7"><a href="#cb128-7" aria-hidden="true" tabindex="-1"></a>D.random<span class="ot">=</span><span class="fu">ifelse</span>(<span class="fu">runif</span>(n)<span class="sc">&gt;</span><span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">0</span>)</span>
+<span id="cb128-8"><a href="#cb128-8" aria-hidden="true" tabindex="-1"></a>p.overlap<span class="ot">=</span><span class="fl">0.1</span></span>
+<span id="cb128-9"><a href="#cb128-9" aria-hidden="true" tabindex="-1"></a>D.nonrandom<span class="ot">=</span><span class="fu">ifelse</span>(x<span class="sc">&lt;</span><span class="dv">5</span>,</span>
+<span id="cb128-10"><a href="#cb128-10" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">ifelse</span>(<span class="fu">runif</span>(n)<span class="sc">&gt;</span>p.overlap,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb128-11"><a href="#cb128-11" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">ifelse</span>(<span class="fu">runif</span>(n)<span class="sc">&gt;</span>p.overlap,<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb128-12"><a href="#cb128-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-13"><a href="#cb128-13" aria-hidden="true" tabindex="-1"></a>alpha<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb128-14"><a href="#cb128-14" aria-hidden="true" tabindex="-1"></a>rho<span class="ot">=</span><span class="dv">5</span></span>
+<span id="cb128-15"><a href="#cb128-15" aria-hidden="true" tabindex="-1"></a>gamma<span class="ot">=</span><span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb128-16"><a href="#cb128-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-17"><a href="#cb128-17" aria-hidden="true" tabindex="-1"></a>y.random<span class="ot">=</span>alpha<span class="sc">+</span>rho<span class="sc">*</span>D.random<span class="sc">+</span>gamma<span class="sc">*</span>x<span class="sc">+</span>e1</span>
+<span id="cb128-18"><a href="#cb128-18" aria-hidden="true" tabindex="-1"></a>y.nonrandom<span class="ot">=</span>alpha<span class="sc">+</span>rho<span class="sc">*</span>D.nonrandom<span class="sc">+</span>gamma<span class="sc">*</span>x<span class="sc">+</span>e1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Two models: (1) randomly assigned x and (2) x is dependent on treatment, i.e., nonrandom</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>lm.random<span class="ot">=</span><span class="fu">lm</span>(y.random<span class="sc">~</span>D.random<span class="sc">+</span>x)</span>
+<span id="cb129-2"><a href="#cb129-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'true causal effect'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "true causal effect"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>(rho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'estimate with random assignment'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "estimate with random assignment"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">coef</span>(lm.random)[<span class="st">"D.random"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>D.random 
+5.176685 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a>lm.nonrandom<span class="ot">=</span><span class="fu">lm</span>(y.nonrandom<span class="sc">~</span>D.nonrandom<span class="sc">+</span>x)</span>
+<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'estimate withnonrandom assignment'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "estimate withnonrandom assignment"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">coef</span>(lm.nonrandom)[<span class="st">"D.nonrandom"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>D.nonrandom 
+   5.088311 </code></pre>
+</div>
+</div>
+<p>Check whether the mean of x is similar under D=0 and D=1 (is it balanced?)</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check whether x is balanced</span></span>
+<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x[D.nonrandom<span class="sc">==</span><span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.620186</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x[D.nonrandom<span class="sc">==</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.057547</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(x[D.nonrandom<span class="sc">==</span><span class="dv">1</span>],<span class="at">col=</span><span class="st">'red'</span>,<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">10</span>))</span>
+<span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(x[D.nonrandom<span class="sc">==</span><span class="dv">0</span>],<span class="at">col=</span><span class="st">'green'</span>,<span class="at">add=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Not balanced. Try to pick two groups with similar x. pick students with 5&lt;x&lt;5.5 under both D=0 and D=1</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>ind0<span class="ot">=</span><span class="fu">which</span>(D.nonrandom<span class="sc">==</span><span class="dv">0</span>)</span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a>ind1<span class="ot">=</span><span class="fu">which</span>(D.nonrandom<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a>ind.match0<span class="ot">=</span>ind0[x[D.nonrandom<span class="sc">==</span><span class="dv">0</span>]<span class="sc">&lt;</span><span class="fl">5.5</span><span class="sc">&amp;</span>x[D.nonrandom<span class="sc">==</span><span class="dv">0</span>]<span class="sc">&gt;</span><span class="dv">5</span>]</span>
+<span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a>ind.match1<span class="ot">=</span>ind1[x[D.nonrandom<span class="sc">==</span><span class="dv">1</span>]<span class="sc">&lt;</span><span class="fl">5.5</span><span class="sc">&amp;</span>x[D.nonrandom<span class="sc">==</span><span class="dv">1</span>]<span class="sc">&gt;</span><span class="dv">5</span>]</span>
+<span id="cb146-5"><a href="#cb146-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-6"><a href="#cb146-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'means of matched covariates'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "means of matched covariates"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x[ind.match0])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.266722</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(x[ind.match1])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.200394</code></pre>
+</div>
+</div>
+<p>Create matched data and fit the model with that data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matched data</span></span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a>df<span class="ot">=</span><span class="fu">data.frame</span>(<span class="at">D=</span>D.nonrandom,<span class="at">y=</span>y.nonrandom,<span class="at">x=</span>x)</span>
+<span id="cb152-3"><a href="#cb152-3" aria-hidden="true" tabindex="-1"></a>df.matched<span class="ot">=</span>df[<span class="fu">c</span>(ind.match0,ind.match1),]</span>
+<span id="cb152-4"><a href="#cb152-4" aria-hidden="true" tabindex="-1"></a>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>    D            y        x
+1   1  2.062571517 5.312836
+2   0 -3.783767299 5.997677
+3   0 -5.618505172 5.551072
+4   0 -9.275849632 6.241472
+5   0 -5.630594880 5.780024
+6   1  2.377572769 5.571225
+7   1 -0.700273183 6.414836
+8   0 -5.716271401 5.759199
+9   0 -7.899012953 5.845937
+10  0 -5.420563551 5.514005
+11  0 -5.629720258 5.417477
+12  1 -0.049651242 5.139482
+13  1  1.271278342 4.859085
+14  0 -4.740021134 5.388576
+15  0 -2.619869046 5.513659
+16  0 -7.759511054 6.413814
+17  0 -7.329413241 6.089206
+18  0 -5.967546660 5.321844
+19  0 -5.010557437 5.966897
+20  1  4.303196985 4.957330
+21  0 -2.505222645 5.559903
+22  1 -0.303451242 5.735880
+23  1  0.180576866 4.651306
+24  0 -3.200224897 6.096353
+25  0 -3.694080263 5.156100
+26  1  0.777475702 4.594772
+27  1  1.064884881 4.878651
+28  1  3.266325453 4.514622
+29  0 -4.452468208 5.293982
+30  0 -4.609239552 5.912902
+31  0 -3.048607901 5.219221
+32  1  0.300195073 4.886591
+33  1 -2.373006237 5.333208
+34  0 -4.535595248 5.503087
+35  1  2.210144168 5.623280
+36  0 -4.984306405 5.723784
+37  0 -3.381471244 5.377491
+38  0 -5.283540600 5.461783
+39  0 -6.437687763 6.061525
+40  0 -4.634716551 6.290375
+41  0 -4.663522179 5.086069
+42  0 -3.482042870 5.745606
+43  0 -3.079764031 5.509288
+44  0 -5.776421816 6.160474
+45  0 -4.813902953 5.965115
+46  1  1.343025468 6.038108
+47  0 -2.160471871 5.349865
+48  0 -5.617634114 6.022370
+49  0 -5.579196298 5.854571
+50  1  0.660375033 4.865296
+51  0 -2.218951211 5.033957
+52  0 -6.316274570 6.186804
+53  0 -5.243374443 5.269474
+54  0 -5.539214741 6.157848
+55  0 -6.774021693 5.829467
+56  1  0.398509793 4.964505
+57  0 -4.829240379 5.230507
+58  1  1.238506437 4.851306
+59  1  1.425900054 5.595117
+60  1  4.623925622 3.730207
+61  0 -3.888735268 6.105699
+62  0 -6.552343798 5.645442
+63  0 -2.650371612 5.907385
+64  0 -3.178349042 5.388830
+65  0 -5.120549950 6.217415
+66  0 -2.578723997 5.594805
+67  0 -3.196359622 5.009206
+68  0 -4.691946974 5.460849
+69  0 -5.823868357 5.950371
+70  1  2.552935343 4.776948
+71  0 -7.780996904 5.464261
+72  0 -4.334260617 5.101928
+73  1 -0.417950433 4.727280
+74  0 -8.578275672 6.548100
+75  1  0.750267456 5.583673
+76  1  0.051095989 5.757049
+77  0 -7.598765069 5.562697
+78  1  0.871105577 4.709376
+79  0 -3.905574390 5.536520
+80  0 -4.209521063 6.173848
+81  0 -4.746127706 6.187700
+82  0 -3.162746737 5.241459
+83  1  0.030843495 6.257914
+84  0 -4.698403410 6.249563
+85  0 -5.077386868 5.907288
+86  0 -6.887714694 6.332824
+87  0 -4.628597604 6.007484
+88  0 -3.379759939 5.763578
+89  1  4.884871921 4.527532
+90  0 -5.506313131 5.844155
+91  0 -4.520537660 5.538166
+92  0 -7.271739809 5.081250
+93  0 -5.613078318 5.424906
+94  0 -2.068666109 5.001893
+95  0 -5.489804859 6.108300
+96  0 -3.560753752 5.414082
+97  1  2.168155486 4.833020
+98  0 -5.995216798 5.570780
+99  1  1.168968537 4.854294
+100 1  1.515042203 4.833756
+101 1  0.935208037 4.597258
+102 0 -3.852356073 5.160980
+103 0 -5.244301362 5.263321
+104 0 -6.743595100 6.013709
+105 0 -3.410069837 5.201306
+106 0 -2.989046025 6.079925
+107 1  1.439059274 4.833387
+108 0 -4.141074454 5.037122
+109 1  0.595549483 4.962752
+110 1  3.346603751 4.774442
+111 0 -2.555637323 5.205634
+112 0 -2.335690994 5.442308
+113 1  1.794883851 5.139815
+114 1  0.909264216 5.501650
+115 0 -4.244211981 5.993681
+116 0 -4.581742469 5.976755
+117 1 -0.445826760 4.645649
+118 0 -1.419026480 5.646699
+119 1 -0.643703458 4.925499
+120 0 -2.983894508 5.412353
+121 0 -6.371463449 5.517577
+122 0 -5.507376320 5.166607
+123 0 -5.155523067 5.092157
+124 0 -6.357424286 5.560939
+125 0 -4.637812541 5.532677
+126 1  0.089332113 4.636824
+127 0 -3.796911647 5.032207
+128 0 -2.123204486 6.149327
+129 0 -3.098619244 5.205008
+130 0 -7.315030325 5.777646
+131 0 -3.685953374 5.402528
+132 0 -4.043913511 5.155937
+133 0 -1.627702312 5.541349
+134 0 -3.826352341 5.584073
+135 0 -5.290465730 5.902773
+136 0 -6.287606881 5.393900
+137 1  0.996399158 5.073785
+138 1  2.933293555 4.851663
+139 1  0.431283726 4.227670
+140 0 -5.916065965 5.768129
+141 0 -3.034945283 5.511733
+142 0 -3.648307725 6.023465
+143 0 -4.681114552 5.246798
+144 0 -5.555247050 5.823981
+145 0 -5.150608339 5.742859
+146 1  2.762827066 4.896499
+147 0 -4.410580026 5.498515
+148 0 -4.905445559 6.293430
+149 0 -1.556279497 5.003388
+150 0 -3.225958383 5.530011
+151 1  1.996859366 5.828707
+152 0 -1.802850069 5.383446
+153 0 -5.342005477 5.872839
+154 0 -4.923816007 5.770539
+155 0 -3.831613752 5.082420
+156 0 -3.882494782 5.567406
+157 0 -5.110151602 5.357789
+158 0 -4.392932496 5.733342
+159 0 -5.009738387 4.946789
+160 0 -3.915857935 5.446089
+161 0 -5.945915174 5.525119
+162 1 -0.003969037 5.655440
+163 0 -2.502110225 5.589444
+164 1  0.513555609 4.970109
+165 0 -5.059315716 5.013183
+166 0 -3.341211583 5.219332
+167 1 -3.351205156 4.858551
+168 0 -5.340340269 6.493319
+169 0 -4.225453564 5.535592
+170 0 -0.782313645 5.298953
+171 1 -0.243435747 5.402117
+172 0 -5.506721171 5.303389
+173 0 -1.026782953 5.454932
+174 0 -3.852479024 5.403344
+175 1  0.807349182 5.183852
+176 0 -3.546042190 5.314158
+177 0 -4.804780400 5.133704
+178 0 -5.909904725 5.093356
+179 1  1.362554634 5.793876
+180 0 -4.100424978 5.233938
+181 0 -5.383447068 6.235071
+182 0 -6.536610172 5.563023
+183 0 -6.132232516 5.938808
+184 0 -3.537696592 5.261268
+185 1  0.194020265 4.378534
+186 0 -3.758504492 5.507809
+187 0 -3.202853583 6.066084
+188 0 -3.041377676 5.462297
+189 0 -6.271265751 5.278143
+190 0 -4.439604013 5.630039
+191 0 -4.491797815 5.506671
+192 1  2.339385135 5.018058
+193 0 -4.753829080 6.328654
+194 0 -6.350112103 5.387467
+195 1  0.751748395 4.740713
+196 1  2.858574473 4.832208
+197 0 -3.362669522 5.764764
+198 0 -2.450736706 6.196631
+199 0 -6.534412894 6.063314
+200 0 -5.500437858 5.494320</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a>(df.matched)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>    D           y        x
+11  0 -5.62972026 5.417477
+14  0 -4.74002113 5.388576
+18  0 -5.96754666 5.321844
+25  0 -3.69408026 5.156100
+29  0 -4.45246821 5.293982
+31  0 -3.04860790 5.219221
+37  0 -3.38147124 5.377491
+38  0 -5.28354060 5.461783
+41  0 -4.66352218 5.086069
+47  0 -2.16047187 5.349865
+51  0 -2.21895121 5.033957
+53  0 -5.24337444 5.269474
+57  0 -4.82924038 5.230507
+64  0 -3.17834904 5.388830
+67  0 -3.19635962 5.009206
+68  0 -4.69194697 5.460849
+71  0 -7.78099690 5.464261
+72  0 -4.33426062 5.101928
+82  0 -3.16274674 5.241459
+92  0 -7.27173981 5.081250
+93  0 -5.61307832 5.424906
+94  0 -2.06866611 5.001893
+96  0 -3.56075375 5.414082
+102 0 -3.85235607 5.160980
+103 0 -5.24430136 5.263321
+105 0 -3.41006984 5.201306
+108 0 -4.14107445 5.037122
+111 0 -2.55563732 5.205634
+112 0 -2.33569099 5.442308
+120 0 -2.98389451 5.412353
+122 0 -5.50737632 5.166607
+123 0 -5.15552307 5.092157
+127 0 -3.79691165 5.032207
+129 0 -3.09861924 5.205008
+131 0 -3.68595337 5.402528
+132 0 -4.04391351 5.155937
+136 0 -6.28760688 5.393900
+143 0 -4.68111455 5.246798
+147 0 -4.41058003 5.498515
+149 0 -1.55627950 5.003388
+152 0 -1.80285007 5.383446
+155 0 -3.83161375 5.082420
+157 0 -5.11015160 5.357789
+160 0 -3.91585793 5.446089
+165 0 -5.05931572 5.013183
+166 0 -3.34121158 5.219332
+170 0 -0.78231364 5.298953
+172 0 -5.50672117 5.303389
+173 0 -1.02678295 5.454932
+174 0 -3.85247902 5.403344
+176 0 -3.54604219 5.314158
+177 0 -4.80478040 5.133704
+178 0 -5.90990473 5.093356
+180 0 -4.10042498 5.233938
+184 0 -3.53769659 5.261268
+188 0 -3.04137768 5.462297
+189 0 -6.27126575 5.278143
+194 0 -6.35011210 5.387467
+200 0 -5.50043786 5.494320
+1   1  2.06257152 5.312836
+12  1 -0.04965124 5.139482
+33  1 -2.37300624 5.333208
+113 1  1.79488385 5.139815
+137 1  0.99639916 5.073785
+171 1 -0.24343575 5.402117
+175 1  0.80734918 5.183852
+192 1  2.33938514 5.018058</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df)<span class="sc">+</span><span class="fu">geom_histogram</span>(<span class="fu">aes</span>(x,<span class="at">fill=</span><span class="fu">factor</span>(D)),<span class="at">alpha=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb157"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df.matched)<span class="sc">+</span><span class="fu">geom_histogram</span>(<span class="fu">aes</span>(x,<span class="at">fill=</span><span class="fu">factor</span>(D)),<span class="at">alpha=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-23-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit model </span></span>
+<span id="cb158-2"><a href="#cb158-2" aria-hidden="true" tabindex="-1"></a>lm.matched<span class="ot">=</span><span class="fu">lm</span>(y<span class="sc">~</span>D<span class="sc">+</span>x,df.matched)</span>
+<span id="cb158-3"><a href="#cb158-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'true causal effect'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "true causal effect"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a>(rho)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb162"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">'estimate with nonrandom assignment and matched covariate'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "estimate with nonrandom assignment and matched covariate"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb164"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">coef</span>(lm.matched)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+4.709783 </code></pre>
+</div>
+</div>
+<p>Use MatchIt</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb166"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb166-1"><a href="#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MatchIt)</span>
+<span id="cb166-2"><a href="#cb166-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb166-3"><a href="#cb166-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fit model with full data</span></span>
+<span id="cb166-4"><a href="#cb166-4" aria-hidden="true" tabindex="-1"></a>lm.full<span class="ot">=</span><span class="fu">lm</span>(y<span class="sc">~</span>D<span class="sc">+</span>x,df)</span>
+<span id="cb166-5"><a href="#cb166-5" aria-hidden="true" tabindex="-1"></a>(<span class="fu">coef</span>(lm.full)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+5.088311 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb168"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb168-1"><a href="#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit model with 1:1 matched data</span></span>
+<span id="cb168-2"><a href="#cb168-2" aria-hidden="true" tabindex="-1"></a>m_out <span class="ot">&lt;-</span> <span class="fu">matchit</span>(D <span class="sc">~</span> x,<span class="at">data =</span> df, <span class="at">method =</span> <span class="st">"optimal"</span>)</span>
+<span id="cb168-3"><a href="#cb168-3" aria-hidden="true" tabindex="-1"></a>m_data <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_out,<span class="at">drop.unmatched =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb168-4"><a href="#cb168-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">'total of '</span>, <span class="fu">dim</span>(m_data)[<span class="dv">1</span>], <span class="st">' matched data. 1:1 matching, thus, number of controls = treatment = '</span>, <span class="fu">dim</span>(m_data)[<span class="dv">1</span>]<span class="sc">/</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "total of 108 matched data. 1:1 matching, thus, number of controls = treatment = 54"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb170"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb170-1"><a href="#cb170-1" aria-hidden="true" tabindex="-1"></a>lm.matched2<span class="ot">=</span><span class="fu">lm</span>(y<span class="sc">~</span>D<span class="sc">+</span>x,m_data)</span>
+<span id="cb170-2"><a href="#cb170-2" aria-hidden="true" tabindex="-1"></a>(<span class="fu">coef</span>(lm.matched2)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+5.119608 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb172"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb172-1"><a href="#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit model with CEM matched data</span></span>
+<span id="cb172-2"><a href="#cb172-2" aria-hidden="true" tabindex="-1"></a>m_out_cem <span class="ot">&lt;-</span> <span class="fu">matchit</span>(D <span class="sc">~</span> x,<span class="at">data =</span> df, <span class="at">method =</span> <span class="st">"cem"</span>)</span>
+<span id="cb172-3"><a href="#cb172-3" aria-hidden="true" tabindex="-1"></a>m_data_cem <span class="ot">&lt;-</span> <span class="fu">match.data</span>(m_out_cem,<span class="at">drop.unmatched =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb172-4"><a href="#cb172-4" aria-hidden="true" tabindex="-1"></a>lm.matched3<span class="ot">=</span><span class="fu">lm</span>(y<span class="sc">~</span>D<span class="sc">+</span>x,m_data_cem,<span class="at">weights =</span> m_data_cem<span class="sc">$</span>weights)</span>
+<span id="cb172-5"><a href="#cb172-5" aria-hidden="true" tabindex="-1"></a>(<span class="fu">coef</span>(lm.matched3)[<span class="st">"D"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       D 
+5.843844 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb174"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot covariates</span></span>
+<span id="cb174-2"><a href="#cb174-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
+<span id="cb174-3"><a href="#cb174-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x<span class="sc">~</span><span class="fu">factor</span>(D),df)</span>
+<span id="cb174-4"><a href="#cb174-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x<span class="sc">~</span><span class="fu">factor</span>(D),m_data)</span>
+<span id="cb174-5"><a href="#cb174-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x<span class="sc">~</span><span class="fu">factor</span>(D),m_data_cem)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="main-causal-structures_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

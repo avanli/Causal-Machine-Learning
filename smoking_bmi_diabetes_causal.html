@@ -4614,9 +4614,18 @@ vertical-align: -.125em;
   <li><a href="#the-delta-method-approximation" id="toc-the-delta-method-approximation" class="nav-link" data-scroll-target="#the-delta-method-approximation"><span class="header-section-number">6.1</span> The delta method approximation</a></li>
   <li><a href="#approximation-error" id="toc-approximation-error" class="nav-link" data-scroll-target="#approximation-error"><span class="header-section-number">6.2</span> Approximation error</a></li>
   <li><a href="#what-to-expect-from-analyses-b-and-c" id="toc-what-to-expect-from-analyses-b-and-c" class="nav-link" data-scroll-target="#what-to-expect-from-analyses-b-and-c"><span class="header-section-number">6.3</span> What to expect from Analyses B and C</a></li>
+  <li><a href="#why-the-ade-has-a-range-rather-than-a-single-expected-value" id="toc-why-the-ade-has-a-range-rather-than-a-single-expected-value" class="nav-link" data-scroll-target="#why-the-ade-has-a-range-rather-than-a-single-expected-value"><span class="header-section-number">6.4</span> Why the ADE has a range rather than a single expected value</a></li>
   </ul></li>
-  <li><a href="#analysis-b-causal-mediation-analysis" id="toc-analysis-b-causal-mediation-analysis" class="nav-link" data-scroll-target="#analysis-b-causal-mediation-analysis"><span class="header-section-number">7</span> Analysis B — Causal mediation analysis</a></li>
-  <li><a href="#analysis-c-g-formula-parametric-scm" id="toc-analysis-c-g-formula-parametric-scm" class="nav-link" data-scroll-target="#analysis-c-g-formula-parametric-scm"><span class="header-section-number">8</span> Analysis C — G-formula (parametric SCM)</a></li>
+  <li><a href="#analysis-b-causal-mediation-analysis" id="toc-analysis-b-causal-mediation-analysis" class="nav-link" data-scroll-target="#analysis-b-causal-mediation-analysis"><span class="header-section-number">7</span> Analysis B — Causal mediation analysis</a>
+  <ul class="collapse">
+  <li><a href="#statistical-framework" id="toc-statistical-framework" class="nav-link" data-scroll-target="#statistical-framework"><span class="header-section-number">7.1</span> Statistical framework</a></li>
+  <li><a href="#implementation-two-model-approach" id="toc-implementation-two-model-approach" class="nav-link" data-scroll-target="#implementation-two-model-approach"><span class="header-section-number">7.2</span> Implementation: two-model approach</a></li>
+  </ul></li>
+  <li><a href="#analysis-c-g-formula-parametric-scm" id="toc-analysis-c-g-formula-parametric-scm" class="nav-link" data-scroll-target="#analysis-c-g-formula-parametric-scm"><span class="header-section-number">8</span> Analysis C — G-formula (parametric SCM)</a>
+  <ul class="collapse">
+  <li><a href="#statistical-framework-1" id="toc-statistical-framework-1" class="nav-link" data-scroll-target="#statistical-framework-1"><span class="header-section-number">8.1</span> Statistical framework</a></li>
+  <li><a href="#implementation-three-step-algorithm" id="toc-implementation-three-step-algorithm" class="nav-link" data-scroll-target="#implementation-three-step-algorithm"><span class="header-section-number">8.2</span> Implementation: three-step algorithm</a></li>
+  </ul></li>
   <li><a href="#naïve-vs-causal-ate-comparison" id="toc-naïve-vs-causal-ate-comparison" class="nav-link" data-scroll-target="#naïve-vs-causal-ate-comparison"><span class="header-section-number">9</span> Naïve vs causal ATE comparison</a></li>
   <li><a href="#heterogeneous-treatment-effects-cate" id="toc-heterogeneous-treatment-effects-cate" class="nav-link" data-scroll-target="#heterogeneous-treatment-effects-cate"><span class="header-section-number">10</span> Heterogeneous treatment effects (CATE)</a>
   <ul class="collapse">
@@ -5253,7 +5262,26 @@ Why this is wrong — and what “underestimate” really means here
 <h3 data-number="6.3" class="anchored" data-anchor-id="what-to-expect-from-analyses-b-and-c"><span class="header-section-number">6.3</span> What to expect from Analyses B and C</h3>
 <p>Combining the direct effect (<span class="math inline">\(-0.30\)</span> log-odds) with the opposing mediated pathway — quitting raises BMI by <span class="math inline">\(+0.90\)</span> kg/m<span class="math inline">\(^2\)</span> on average, and each kg/m<span class="math inline">\(^2\)</span> increases log-odds of T2D by <span class="math inline">\(+0.20\)</span>, contributing <span class="math inline">\(+0.90 \times 0.20 = +0.18\)</span> log-odds — gives a net log-odds change of <span class="math inline">\(-0.30 + 0.18 = -0.12\)</span>. Converting to the probability scale:</p>
 <p><span class="math display">\[\Delta P_{\text{net}} \approx 0.05 \times 0.95 \times 0.12 \approx 0.006\]</span></p>
-<p>The table below summarises the expected values, which Analyses B and C should recover:</p>
+<p>The subsection below explains why the ADE is expressed as a range, then provides the full expected-value table.</p>
+</section>
+<section id="why-the-ade-has-a-range-rather-than-a-single-expected-value" class="level3" data-number="6.4">
+<h3 data-number="6.4" class="anchored" data-anchor-id="why-the-ade-has-a-range-rather-than-a-single-expected-value"><span class="header-section-number">6.4</span> Why the ADE has a range rather than a single expected value</h3>
+<p>The ADE expected value is given as a range (<span class="math inline">\(-0.010\)</span> to <span class="math inline">\(-0.014\)</span>) rather than a single number because there are <strong>two legitimate but different approximation paths</strong> to the same underlying quantity, and they give slightly different answers.</p>
+<p><strong>Path 1 — Delta method (linear approximation):</strong> applies the first-order Taylor expansion of the logistic function at the baseline probability <span class="math inline">\(P = 0.05\)</span>:</p>
+<p><span class="math display">\[\text{ADE}_{\text{delta}} \approx -P(1-P) \times |\Delta\eta|
+= -0.05 \times 0.95 \times 0.30 = -0.01425 \approx -0.014\]</span></p>
+<p>This uses the derivative <span class="math inline">\(d\sigma/d\eta = P(1-P)\)</span> evaluated at the baseline log-odds <span class="math inline">\(\eta_0\)</span>, and treats the logistic curve as locally linear. It is an <em>upper bound</em> on the magnitude because the logistic curve is concave at <span class="math inline">\(P = 0.05\)</span> — the linear approximation overshoots.</p>
+<p><strong>Path 2 — Exact calculation:</strong> evaluates the logistic function directly at the baseline log-odds and at the shifted value:</p>
+<p><span class="math display">\[\eta_0 = \log\!\left(\frac{0.05}{0.95}\right) \approx -2.944\]</span></p>
+<p><span class="math display">\[\text{ADE}_{\text{exact}} = \sigma(\eta_0 - 0.30) - \sigma(\eta_0)
+= \sigma(-3.244) - \sigma(-2.944) \approx 0.0377 - 0.0500 = -0.0123\]</span></p>
+<p>This is the true value of the ADE implied by the SEM, without approximation. The mediation package and g-formula use this exact evaluation (through simulation and prediction from the fitted logistic model), so the ADE they report should be close to <span class="math inline">\(-0.012\)</span>, not <span class="math inline">\(-0.014\)</span>.</p>
+<p><strong>Why a range rather than the single exact value <span class="math inline">\(-0.012\)</span>?</strong> The range brackets both estimates to make clear that:</p>
+<ol type="1">
+<li>The delta method (<span class="math inline">\(-0.014\)</span>) and the exact value (<span class="math inline">\(-0.012\)</span>) are both legitimate derivations of the same quantity — they differ only due to the approximation error of <span class="math inline">\(\approx 0.002\)</span>.</li>
+<li>The simulated ATE from the data will not be exactly <span class="math inline">\(-0.012\)</span> either, because the cohort has additional sources of variability (residual noise <span class="math inline">\(\varepsilon_3 \sim \mathcal{N}(0, 0.3^2)\)</span> in <span class="math inline">\(\text{lp\_dm}\)</span>, finite sample variation, subgroup heterogeneity) that shift the realised baseline prevalence slightly from <span class="math inline">\(5\%\)</span>, which in turn shifts the <span class="math inline">\(P(1-P)\)</span> scaling factor.</li>
+</ol>
+<p>The range <span class="math inline">\(-0.010\)</span> to <span class="math inline">\(-0.014\)</span> is therefore a <strong>prediction interval</strong> for what the analysis will return, not an expression of uncertainty about a fixed quantity. In practice any value in this range confirms the SEM parameters are being correctly recovered.</p>
 <table class="table">
 <colgroup>
 <col style="width: 25%">
@@ -5274,13 +5302,25 @@ Why this is wrong — and what “underestimate” really means here
 <td>Direct effect of quit</td>
 <td>Log-odds</td>
 <td>SEM coefficient</td>
-<td><span class="math inline">\(-0.30\)</span></td>
+<td><span class="math inline">\(-0.30\)</span> (exact)</td>
 </tr>
 <tr class="even">
 <td>ADE (direct effect)</td>
 <td>Risk difference</td>
-<td><span class="math inline">\(P(1-P) \times 0.30\)</span></td>
-<td><span class="math inline">\(\approx -0.010\)</span> to <span class="math inline">\(-0.014\)</span></td>
+<td>Delta method</td>
+<td><span class="math inline">\(-0.014\)</span> (upper bound)</td>
+</tr>
+<tr class="odd">
+<td>ADE (direct effect)</td>
+<td>Risk difference</td>
+<td>Exact logistic</td>
+<td><span class="math inline">\(-0.012\)</span> (best single value)</td>
+</tr>
+<tr class="even">
+<td>ADE prediction interval</td>
+<td>Risk difference</td>
+<td>Both paths + noise</td>
+<td><span class="math inline">\(-0.010\)</span> to <span class="math inline">\(-0.014\)</span></td>
 </tr>
 <tr class="odd">
 <td>Mediated effect via BMI</td>
@@ -5298,13 +5338,13 @@ Why this is wrong — and what “underestimate” really means here
 <td>OR for quit (direct)</td>
 <td>Odds ratio</td>
 <td><span class="math inline">\(e^{-0.30}\)</span></td>
-<td><span class="math inline">\(\approx 0.74\)</span></td>
+<td><span class="math inline">\(\approx 0.74\)</span> (exact)</td>
 </tr>
 <tr class="even">
 <td>OR for <span class="math inline">\(\Delta\)</span>BMI per kg/m<span class="math inline">\(^2\)</span></td>
 <td>Odds ratio</td>
 <td><span class="math inline">\(e^{+0.20}\)</span></td>
-<td><span class="math inline">\(\approx 1.22\)</span></td>
+<td><span class="math inline">\(\approx 1.22\)</span> (exact)</td>
 </tr>
 </tbody>
 </table>
@@ -5314,19 +5354,45 @@ Why this is wrong — and what “underestimate” really means here
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Key takeaway on scale
+Key takeaways on scale and the ADE range
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The ADE of <span class="math inline">\(\approx -0.010\)</span> is <strong>not</strong> a discrepancy from the SEM’s <span class="math inline">\(-0.30\)</span> — they are the same quantity on different scales. Comparing <span class="math inline">\(-0.010\)</span> (risk difference) with <span class="math inline">\(-0.30\)</span> (log-odds) directly is a category error. The OR of <span class="math inline">\(e^{-0.30} \approx 0.74\)</span> is the correct log-odds-scale equivalent of the ADE.</p>
+<p>The ADE of <span class="math inline">\(\approx -0.012\)</span> is <strong>not</strong> a discrepancy from the SEM’s <span class="math inline">\(-0.30\)</span> — they are the same direct effect on different scales. Comparing <span class="math inline">\(-0.012\)</span> (risk difference) with <span class="math inline">\(-0.30\)</span> (log-odds) directly is a category error. The OR of <span class="math inline">\(e^{-0.30} \approx 0.74\)</span> is the correct log-odds-scale equivalent of the ADE.</p>
+<p>The range <span class="math inline">\(-0.010\)</span> to <span class="math inline">\(-0.014\)</span> in the table above reflects two legitimate approximation paths (delta method vs exact logistic evaluation) plus finite-sample variability. The single best analytical prediction is <span class="math inline">\(-0.012\)</span> from the exact calculation. Values returned by Analyses B and C should fall within this range.</p>
 </div>
 </div>
 </section>
 </section>
 <section id="analysis-b-causal-mediation-analysis" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="analysis-b-causal-mediation-analysis"><span class="header-section-number">7</span> Analysis B — Causal mediation analysis</h2>
-<p>Using the <code>mediation</code> package <span class="citation" data-cites="imai2010">(<a href="#ref-imai2010" role="doc-biblioref">Imai, Keele, and Tingley 2010</a>)</span> to decompose the total effect of quitting into:</p>
-<p><span class="math display">\[\text{TE} = \underbrace{\text{ACME}}_{\text{via ΔBMI}} + \underbrace{\text{ADE}}_{\text{direct}}\]</span></p>
+<section id="statistical-framework" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="statistical-framework"><span class="header-section-number">7.1</span> Statistical framework</h3>
+<p>The <code>mediation</code> package <span class="citation" data-cites="imai2010">(<a href="#ref-imai2010" role="doc-biblioref">Imai, Keele, and Tingley 2010</a>)</span> implements the <strong>potential outcomes</strong> decomposition of the total effect. Define <span class="math inline">\(Y_i(t, m)\)</span> as the potential outcome for individual <span class="math inline">\(i\)</span> under treatment <span class="math inline">\(T = t\)</span> and mediator value <span class="math inline">\(M = m\)</span>. The package estimates three quantities:</p>
+<p><span class="math display">\[\text{ACME}(t) = E\bigl[Y_i(t,\, M_i(1)) - Y_i(t,\, M_i(0))\bigr]\]</span></p>
+<p><span class="math display">\[\text{ADE}(t) = E\bigl[Y_i(1,\, M_i(t)) - Y_i(0,\, M_i(t))\bigr]\]</span></p>
+<p><span class="math display">\[\text{TE} = E\bigl[Y_i(1,\, M_i(1)) - Y_i(0,\, M_i(0))\bigr] = \text{ACME}(t) + \text{ADE}(t)\]</span></p>
+<p>where <span class="math inline">\(M_i(t)\)</span> is the <strong>potential mediator value</strong> individual <span class="math inline">\(i\)</span> would have under treatment <span class="math inline">\(t\)</span>. The ACME (Average Causal Mediation Effect) captures the path <strong>Quit <span class="math inline">\(\rightarrow\)</span> <span class="math inline">\(\Delta\)</span>BMI <span class="math inline">\(\rightarrow\)</span> T2D</strong>; the ADE (Average Direct Effect) captures the path <strong>Quit <span class="math inline">\(\rightarrow\)</span> T2D</strong>, holding the mediator fixed at the value it would take under one treatment arm.</p>
+</section>
+<section id="implementation-two-model-approach" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="implementation-two-model-approach"><span class="header-section-number">7.2</span> Implementation: two-model approach</h3>
+<p>The package requires two fitted models:</p>
+<p><strong>Step 1 — Mediator model</strong> (linear, since <span class="math inline">\(\Delta\)</span>BMI is continuous):</p>
+<p><span class="math display">\[\Delta\text{BMI}_i = \alpha_0 + \alpha_1\,\text{Quit}_i
+  + \alpha_2\,\text{BMI}_{0i} + \boldsymbol{\alpha}_c^\top \mathbf{C}_i + \varepsilon_i^M,
+  \quad \varepsilon_i^M \sim \mathcal{N}(0,\sigma_M^2)\]</span></p>
+<p>where <span class="math inline">\(\mathbf{C}_i = (\text{Age}_i, \text{Sex}_i, \text{FamHx}_i, \text{Alcohol}_i, \text{Activity}_i)^\top\)</span> are pre-treatment confounders. The key coefficient is <span class="math inline">\(\hat\alpha_1\)</span>: the average BMI gain caused by quitting, holding confounders fixed.</p>
+<p><strong>Step 2 — Outcome model</strong> (logistic, since T2D is binary):</p>
+<p><span class="math display">\[\text{logit}\,P(\text{T2D}_i = 1) = \beta_0 + \beta_1\,\text{Quit}_i
+  + \beta_2\,\Delta\text{BMI}_i + \boldsymbol{\beta}_c^\top \mathbf{C}_i + \varepsilon_i^Y\]</span></p>
+<p>Here <span class="math inline">\(\beta_1\)</span> is the <strong>direct effect</strong> of quitting (log-odds scale) and <span class="math inline">\(\beta_2\)</span> is the effect of BMI gain on T2D risk.</p>
+<p><strong>Step 3 — Simulation</strong> (<code>sims = 500</code>): for each bootstrap draw the package:</p>
+<ol type="1">
+<li>Draws <span class="math inline">\(\hat M_i(0)\)</span> and <span class="math inline">\(\hat M_i(1)\)</span> from the mediator model posterior</li>
+<li>Plugs both into the outcome model under each treatment assignment</li>
+<li>Averages the contrasts to obtain ACME and ADE on the <strong>probability scale</strong></li>
+</ol>
+<p>This simulation-based approach correctly handles the non-linearity of the logistic outcome model — it does not assume effects add linearly on the probability scale.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -5464,16 +5530,39 @@ Key takeaway on scale
 </div>
 <hr>
 </section>
+</section>
 <section id="analysis-c-g-formula-parametric-scm" class="level2" data-number="8">
 <h2 data-number="8" class="anchored" data-anchor-id="analysis-c-g-formula-parametric-scm"><span class="header-section-number">8</span> Analysis C — G-formula (parametric SCM)</h2>
-<p>The fully causal approach. For each individual we:</p>
-<ol type="1">
-<li>Fit <span class="math inline">\(E[\Delta\text{BMI} \mid \text{do(quit}=t\text{)}, \mathbf{X}]\)</span> — the mediator model.</li>
-<li>Predict <span class="math inline">\(\widehat{\Delta\text{BMI}}\)</span> under the intervention <span class="math inline">\(t \in \{0,1\}\)</span>.</li>
-<li>Plug <span class="math inline">\(\widehat{\Delta\text{BMI}}\)</span> into the outcome model to predict T2D risk.</li>
-<li>Average over the covariate distribution <span class="math inline">\(\rightarrow\)</span> ATE.</li>
-</ol>
-<p>This implements <span class="math inline">\(E[Y(\text{do}(A=1))]\)</span> rather than <span class="math inline">\(E[Y \mid A=1]\)</span>.</p>
+<section id="statistical-framework-1" class="level3" data-number="8.1">
+<h3 data-number="8.1" class="anchored" data-anchor-id="statistical-framework-1"><span class="header-section-number">8.1</span> Statistical framework</h3>
+<p>The <strong>g-formula</strong> (or parametric g-computation) implements Pearl’s do-calculus directly. It computes <span class="math inline">\(E[Y(\text{do}(T=t))]\)</span> — the mean outcome under a hypothetical intervention that sets treatment to <span class="math inline">\(t\)</span> for everyone — rather than the conditional expectation <span class="math inline">\(E[Y \mid T=t]\)</span> which conflates causal and selection effects.</p>
+<p>The key insight is the <strong>g-computation identity</strong> for a mediator <span class="math inline">\(M\)</span> and confounders <span class="math inline">\(\mathbf{C}\)</span>:</p>
+<p><span class="math display">\[E[Y(\text{do}(T=t))] =
+  \int_{\mathbf{c}} \int_m
+  E[Y \mid T=t,\, M=m,\, \mathbf{C}=\mathbf{c}]\;
+  \underbrace{p(m \mid T=t,\, \mathbf{C}=\mathbf{c})}_{\text{mediator dist. under } do(T=t)}\;
+  p(\mathbf{c})\; dm\, d\mathbf{c}\]</span></p>
+<p>The crucial difference from naïve ML is the distribution over <span class="math inline">\(M\)</span>: naïve ML conditions on the <strong>observed</strong> <span class="math inline">\(M_i\)</span> (which was realised under the individual’s actual treatment); the g-formula integrates over the <strong>predicted</strong> <span class="math inline">\(M\)</span> under the intervention value <span class="math inline">\(t\)</span>. This correctly propagates <span class="math inline">\(\text{do}(\text{Quit}=1) \rightarrow \Delta\text{BMI} \uparrow \rightarrow \text{T2D risk} \uparrow\)</span>.</p>
+</section>
+<section id="implementation-three-step-algorithm" class="level3" data-number="8.2">
+<h3 data-number="8.2" class="anchored" data-anchor-id="implementation-three-step-algorithm"><span class="header-section-number">8.2</span> Implementation: three-step algorithm</h3>
+<p><strong>Step 1 — Fit the mediator model</strong> on observed data:</p>
+<p><span class="math display">\[\widehat{\Delta\text{BMI}}_i^{(t)} =
+  \hat\alpha_0 + \hat\alpha_1\,t
+  + \hat\alpha_2\,\text{BMI}_{0i}
+  + \hat{\boldsymbol{\alpha}}_c^\top \mathbf{C}_i\]</span></p>
+<p>For each individual, predict <span class="math inline">\(\Delta\)</span>BMI <em>as if</em> <span class="math inline">\(\text{Quit} = t\)</span>, regardless of their observed treatment. This is the operationalisation of <span class="math inline">\(\text{do}(\text{Quit} = t)\)</span> in the mediator equation.</p>
+<p><strong>Step 2 — Predict T2D risk using the counterfactual mediator</strong>:</p>
+<p><span class="math display">\[\hat P_i^{(t)} = \sigma\!\left(
+  \hat\beta_0 + \hat\beta_1\,t
+  + \hat\beta_2\,\widehat{\Delta\text{BMI}}_i^{(t)}
+  + \hat{\boldsymbol{\beta}}_c^\top \mathbf{C}_i\right)\]</span></p>
+<p><strong>Step 3 — Average over the covariate distribution</strong> (standardisation):</p>
+<p><span class="math display">\[\widehat{\text{ATE}} =
+  \frac{1}{n}\sum_{i=1}^n \hat P_i^{(1)}
+  - \frac{1}{n}\sum_{i=1}^n \hat P_i^{(0)}\]</span></p>
+<p>This is a <strong>Monte Carlo approximation</strong> of the population-level do-calculus integral, using the observed covariate distribution as the reference population. The bootstrap CI re-runs all three steps on each resample to propagate uncertainty from both models.</p>
+<p><strong>Why this differs from naïve ML:</strong> Naïve ML predicts <span class="math inline">\(E[\text{T2D} \mid \text{Quit}=1, \Delta\text{BMI} = \Delta\text{BMI}_i^{\text{obs}}]\)</span> — it plugs in the <em>observed</em> BMI change for each individual, which was determined under their actual (not counterfactual) treatment. A quitter who happened to gain little weight gets a low predicted risk; a hypothetical non-quitter who would have gained weight anyway is never considered. The g-formula instead asks: <em>if this individual were assigned to quit, what BMI change would we predict, and what T2D risk would follow?</em></p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -5617,6 +5706,7 @@ Key takeaway on scale
 </div>
 </div>
 <hr>
+</section>
 </section>
 <section id="naïve-vs-causal-ate-comparison" class="level2" data-number="9">
 <h2 data-number="9" class="anchored" data-anchor-id="naïve-vs-causal-ate-comparison"><span class="header-section-number">9</span> Naïve vs causal ATE comparison</h2>
